@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'dev.rodriigo.minecraft'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT"
+}
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+}
+shadowJar {
+    minimize()
+
+    archiveFileName.set("${project.name}-base.jar")
+
+}
+
+tasks.register("buildShadowJar", Jar) {
+    dependsOn shadowJar
+    from shadowJar
+}
+
+// Build the task 'build' so it depends on 'buildShadowJar'
+tasks.build.dependsOn buildShadowJar
