@@ -1,4 +1,4 @@
-package dev.rodriigo.minecraft.util;
+package dev.rodriigo.minecraft.listener;
 
 import com.comphenix.protocol.events.PacketEvent;
 

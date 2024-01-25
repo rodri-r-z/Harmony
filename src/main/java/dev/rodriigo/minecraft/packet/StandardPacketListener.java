@@ -6,14 +6,21 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import dev.rodriigo.minecraft.BackendPlugin;
-import dev.rodriigo.minecraft.util.RegisteredPacketListener;
+import dev.rodriigo.minecraft.listener.RegisteredPacketListener;
 
-public class StandardPacketListener extends PacketAdapter implements RegisteredPacketListener {
+public abstract class StandardPacketListener extends PacketAdapter implements RegisteredPacketListener {
 
-    public StandardPacketListener(PacketType... types) {
+    public StandardPacketListener(PacketType[] types) {
         super(
                 BackendPlugin.getInstance(),
                 types
+        );
+    }
+
+    public StandardPacketListener(PacketType type) {
+        super(
+                BackendPlugin.getInstance(),
+                type
         );
     }
 

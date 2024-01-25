@@ -49,7 +49,7 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
             noSQLConnectionBridge = new NoSQLConnectionBridge(mongoDB);
         } else if (driver.equalsIgnoreCase("sqlite")) {
             // Create a connection to SQLite
-            connection = new RelationalBridge(
+            connection = RelationalBridge.fromSqlite(
                     backendPlugin.getDataFolder()
                             .toPath()
                             .resolve(database)

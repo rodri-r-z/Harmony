@@ -29,6 +29,8 @@ dependencies {
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
     compileOnly 'org.mongodb:mongodb-driver-sync:5.0.0-beta0'
+    compileOnly "net.kyori:adventure-api:4.15.0"
+
 }
 
 def targetJavaVersion = 8

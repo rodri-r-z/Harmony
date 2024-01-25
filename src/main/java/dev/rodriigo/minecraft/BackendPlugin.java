@@ -6,6 +6,7 @@ import dev.rodriigo.minecraft.scheduler.GlobalScheduler;
 import dev.rodriigo.minecraft.scheduler.NormalizedScheduler;
 import dev.rodriigo.minecraft.internal.PluginLogger;
 import dev.rodriigo.minecraft.internal.StandardBackendPlugin;
+import dev.rodriigo.minecraft.util.CommandUtil;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +38,9 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
         console = getServer().getConsoleSender();
         logger = new PluginLogger();
         scheduler = new GlobalScheduler().getScheduler();
+
+        // Load all necessary stuff for CommandUtil
+        CommandUtil._init();
 
         // Legacy servers are considered servers running 1.12 or lower
         // For text coloring purposes, we'll consider legacy versions under 1.16.5

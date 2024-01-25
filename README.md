@@ -32,6 +32,7 @@
 - Support SQL & MongoDB with your plugin without coding them twice
 - Make your plugin support from 1.8 (or even lower versions) to 1.20 
 - Listen & send packets (optional)
+- Command API
 - [More is coming!](#upcoming-features)
 
 ---

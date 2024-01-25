@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 
 public class RelationalBridge {
 
-    static Connection connection;
+    Connection connection;
 
-    public RelationalBridge(String database) {
+    public static RelationalBridge fromSqlite(String database) {
         try {
             // Instance the driver for older versions
             Class.forName("org.sqlite.JDBC");
@@ -17,7 +17,7 @@ public class RelationalBridge {
 
         // Constructor for SQLite
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + database);
+            return new RelationalBridge("jdbc:sqlite:" + database);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -55,32 +55,10 @@ public class RelationalBridge {
         }
     }
 
-    public RelationalBridge() {
-        // Check if the connection is null
-        // This method should only be instanced without parameters
-        // If you used the "fromUri" method
-
-        if (connection == null) {
-            throw new RuntimeException("Connection is null! You're probably using the wrong constructor.");
-        }
-    }
-
-    public static RelationalBridge fromUri(String uri) {
+    public RelationalBridge(String uri) {
         // If you want to connect your database with a JDBC URI, this method is for you
         try {
             connection = DriverManager.getConnection(uri);
-            return new RelationalBridge();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static RelationalBridge fromUri(String uri, String user, String password) {
-        // If you want to connect your database with a JDBC URI, but also with username and password
-        // this method is for you
-        try {
-            connection = DriverManager.getConnection(uri, user, password);
-            return new RelationalBridge();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
