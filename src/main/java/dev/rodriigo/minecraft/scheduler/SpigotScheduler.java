@@ -9,32 +9,44 @@ public class SpigotScheduler implements NormalizedScheduler {
     private final BackendPlugin plugin = BackendPlugin.getInstance();
 
     @Override
-    public void run(Runnable runnable) {
-        bukkitScheduler.runTask(plugin, runnable);
+    public NormalizedTask run(Runnable runnable) {
+        return new NormalizedTask(
+            bukkitScheduler.runTask(plugin, runnable)
+        );
     }
 
     @Override
-    public void runLater(Runnable runnable, long delayTicks) {
-        bukkitScheduler.runTaskLater(plugin, runnable, delayTicks);
+    public NormalizedTask runLater(Runnable runnable, long delayTicks) {
+        return new NormalizedTask(
+                bukkitScheduler.runTaskLater(plugin, runnable, delayTicks)
+        );
     }
 
     @Override
-    public void runTimer(Runnable runnable, long delayTicks, long periodTicks) {
-        bukkitScheduler.runTaskTimer(plugin, runnable, delayTicks, periodTicks);
+    public NormalizedTask runTimer(Runnable runnable, long delayTicks, long periodTicks) {
+        return new NormalizedTask(
+                bukkitScheduler.runTaskTimer(plugin, runnable, delayTicks, periodTicks)
+        );
     }
 
     @Override
-    public void runAsync(Runnable runnable) {
-        bukkitScheduler.runTaskAsynchronously(plugin, runnable);
+    public NormalizedTask runAsync(Runnable runnable) {
+        return new NormalizedTask(
+                bukkitScheduler.runTaskAsynchronously(plugin, runnable)
+        );
     }
 
     @Override
-    public void runAsyncLater(Runnable runnable, long delayTicks) {
-        bukkitScheduler.runTaskLaterAsynchronously(plugin, runnable, delayTicks);
+    public NormalizedTask runAsyncLater(Runnable runnable, long delayTicks) {
+        return new NormalizedTask(
+                bukkitScheduler.runTaskLaterAsynchronously(plugin, runnable, delayTicks)
+        );
     }
 
     @Override
-    public void runAsyncTimer(Runnable runnable, long delayTicks, long periodTicks) {
-        bukkitScheduler.runTaskTimerAsynchronously(plugin, runnable, delayTicks, periodTicks);
+    public NormalizedTask runAsyncTimer(Runnable runnable, long delayTicks, long periodTicks) {
+        return new NormalizedTask(
+                bukkitScheduler.runTaskTimerAsynchronously(plugin, runnable, delayTicks, periodTicks)
+        );
     }
 }

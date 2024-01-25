@@ -5,7 +5,6 @@ import dev.rodriigo.minecraft.BackendPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class FoliaScheduler implements NormalizedScheduler {
@@ -20,7 +19,7 @@ public class FoliaScheduler implements NormalizedScheduler {
      * For compatibility purposes, I needed to create an interface
      * So the schedulers are compatible with each other
      * I did not used the return object itself
-     * So I made all methods to return void
+     * So I made all methods to return NormalizedTask
      *
      * Detailed comments:
      * The folia Scheduler works fine
@@ -38,9 +37,10 @@ public class FoliaScheduler implements NormalizedScheduler {
     public FoliaScheduler() throws Exception {}
 
     @Override
-    public void run(Runnable runnable) {
+    public NormalizedTask run(Runnable runnable) {
         try {
-            globalRegionScheduler
+            return new NormalizedTask(
+                    globalRegionScheduler
                     .getClass()
                     .getMethod(
                             "execute",
@@ -50,36 +50,40 @@ public class FoliaScheduler implements NormalizedScheduler {
                             globalRegionScheduler,
                             plugin,
                             runnable
-                    );
+                    )
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void runLater(Runnable runnable, long delayTicks) {
+    public NormalizedTask runLater(Runnable runnable, long delayTicks) {
         try {
-            globalRegionScheduler
-                    .getClass()
-                    .getMethod(
-                            "runDelayed",
-                            Plugin.class,
-                            Consumer.class,
-                            long.class
-                    ).invoke(
-                            globalRegionScheduler,
-                            plugin,
-                            getConsumer(runnable),
-                            delayTicks
-                    );
+            return new NormalizedTask(
+                    globalRegionScheduler
+                            .getClass()
+                            .getMethod(
+                                    "runDelayed",
+                                    Plugin.class,
+                                    Consumer.class,
+                                    long.class
+                            ).invoke(
+                                    globalRegionScheduler,
+                                    plugin,
+                                    getConsumer(runnable),
+                                    delayTicks
+                            )
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void runTimer(Runnable runnable, long delayTicks, long periodTicks) {
+    public NormalizedTask runTimer(Runnable runnable, long delayTicks, long periodTicks) {
         try {
-            globalRegionScheduler
+            return new NormalizedTask(
+                    globalRegionScheduler
                     .getClass()
                     .getMethod(
                             "runAtFixedRate",
@@ -93,7 +97,8 @@ public class FoliaScheduler implements NormalizedScheduler {
                             getConsumer(runnable),
                             delayTicks < 1 ? 1 : delayTicks,
                             periodTicks
-                    );
+                    )
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -101,18 +106,18 @@ public class FoliaScheduler implements NormalizedScheduler {
 
     @Override
     // Added: Execute tasks asynchronously
-    public void runAsync(Runnable runnable) {
-        run(runnable);
+    public NormalizedTask runAsync(Runnable runnable) {
+        return run(runnable);
     }
 
     @Override
-    public void runAsyncLater(Runnable runnable, long delayTicks) {
-        runLater(runnable, delayTicks);
+    public NormalizedTask runAsyncLater(Runnable runnable, long delayTicks) {
+        return runLater(runnable, delayTicks);
     }
 
     @Override
-    public void runAsyncTimer(Runnable runnable, long delayTicks, long periodTicks) {
-        runTimer(runnable, delayTicks, periodTicks);
+    public NormalizedTask runAsyncTimer(Runnable runnable, long delayTicks, long periodTicks) {
+        return runTimer(runnable, delayTicks, periodTicks);
     }
 
     Consumer<?> getConsumer(Runnable runnable) {
