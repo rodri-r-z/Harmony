@@ -9,6 +9,10 @@ version = '1.0'
 
 repositories {
     mavenCentral()
+
+    // ProtocolLib
+    maven { url = 'https://repo.dmulloy2.net/repository/public/' }
+
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
@@ -17,10 +21,14 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT"
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
+
+    implementation 'org.mongodb:mongodb-driver-sync:5.0.0-beta0'
 }
 
 def targetJavaVersion = 8

@@ -1,21 +1,26 @@
 package dev.rodriigo.minecraft;
 
 import dev.rodriigo.minecraft.annotation.Nullable;
-import dev.rodriigo.minecraft.util.PluginLogger;
-import dev.rodriigo.minecraft.util.StandardBackendPlugin;
+import dev.rodriigo.minecraft.scheduler.GlobalScheduler;
+import dev.rodriigo.minecraft.scheduler.NormalizedScheduler;
+import dev.rodriigo.minecraft.internal.PluginLogger;
+import dev.rodriigo.minecraft.internal.StandardBackendPlugin;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class BackendPlugin extends JavaPlugin implements StandardBackendPlugin {
-    Path dataFolder;
-    Server server;
-    CommandSender console;
-    PluginLogger logger;
+    protected Path dataFolder;
+    protected Server server;
+    protected CommandSender console;
+    protected PluginLogger logger;
+    protected NormalizedScheduler scheduler;
 
     static BackendPlugin instance;
 
@@ -26,6 +31,7 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
         server = getServer();
         console = getServer().getConsoleSender();
         logger = new PluginLogger();
+        scheduler = new GlobalScheduler().getScheduler();
 
         instance = this;
 
@@ -116,5 +122,28 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     @Override
     public PluginLogger getOwnLogger() {
         return logger;
+    }
+
+    @Override
+    public NormalizedScheduler findScheduler() {
+        return scheduler;
+    }
+
+    @Override
+    public YamlConfiguration getConfiguration() throws RuntimeException {
+        try (final InputStream is = resolveFrom("config.yml")) {
+            if (is == null) {
+                throw new RuntimeException("File not found: config.yml");
+            }
+            final File configFile = dataFolder.resolve("config.yml").toFile();
+
+            if (!configFile.exists()) {
+                safeSaveFrom("config.yml");
+            }
+
+            return YamlConfiguration.loadConfiguration(configFile);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

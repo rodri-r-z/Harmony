@@ -1,4 +1,4 @@
-package dev.rodriigo.minecraft.util;
+package dev.rodriigo.minecraft.internal;
 
 import dev.rodriigo.minecraft.BackendPlugin;
 import org.bukkit.ChatColor;

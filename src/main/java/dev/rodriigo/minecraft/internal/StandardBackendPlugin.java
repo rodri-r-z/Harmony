@@ -1,4 +1,7 @@
-package dev.rodriigo.minecraft.util;
+package dev.rodriigo.minecraft.internal;
+
+import dev.rodriigo.minecraft.scheduler.NormalizedScheduler;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -23,4 +26,8 @@ public interface StandardBackendPlugin {
     void safeSaveFrom(String resourcePath, Path destinationPath, boolean replace);
 
     PluginLogger getOwnLogger();
+
+    NormalizedScheduler findScheduler();
+
+    YamlConfiguration getConfiguration();
 }
