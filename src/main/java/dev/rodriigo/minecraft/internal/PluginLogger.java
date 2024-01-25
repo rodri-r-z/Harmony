@@ -1,6 +1,7 @@
 package dev.rodriigo.minecraft.internal;
 
 import dev.rodriigo.minecraft.BackendPlugin;
+import dev.rodriigo.minecraft.util.MessageColorFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -17,13 +18,13 @@ public class PluginLogger {
     static final CommandSender console = instance.getConsole();
 
     static final String CONSOLE_PREFIX = ChatColor.translateAlternateColorCodes('&', "&e["+instance.getProvidedPluginName()+"] ");
-    static final String INFO_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&9[Info]: ");
-    static final String WARN_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&6[Warn]: ");
-    static final String ERROR_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&c[Err]: ");
+    static final String INFO_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&9[Info]: &r");
+    static final String WARN_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&6[Warn]: &r");
+    static final String ERROR_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&c[Err]: &r");
 
 
     public void info(String message) {
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        message = MessageColorFormatter.colorize(message);
         console.sendMessage(INFO_PREFIX + message);
     }
 
@@ -36,7 +37,7 @@ public class PluginLogger {
     }
 
     public void warn(String message) {
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        message = MessageColorFormatter.colorize(message);
         console.sendMessage(WARN_PREFIX + message);
     }
 
@@ -91,7 +92,7 @@ public class PluginLogger {
     }
 
     public void severe(String message) {
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        message = MessageColorFormatter.colorize(message);
         console.sendMessage(ERROR_PREFIX + message);
     }
 
