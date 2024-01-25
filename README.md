@@ -43,6 +43,8 @@
 
 **Documentation**: Read the **Wiki** for documentation. 
 
+[**Read JavaDoc**](https://rodri-r-z.github.io/ProMinecraft/docs/)
+
 ---
 
 **Dependencies**: **You don't need to add any dependencies**  if you're working without packets and without databases. **However**:
