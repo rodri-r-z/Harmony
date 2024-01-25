@@ -28,7 +28,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT"
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
-    implementation 'org.mongodb:mongodb-driver-sync:5.0.0-beta0'
+    compileOnly 'org.mongodb:mongodb-driver-sync:5.0.0-beta0'
 }
 
 def targetJavaVersion = 8

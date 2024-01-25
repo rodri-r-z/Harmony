@@ -27,13 +27,14 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     @Override
     public void onEnable() {
         // Automatically create data folder if it doesn't exist
+        instance = this;
+
         dataFolder = getDataFolder().toPath();
         server = getServer();
         console = getServer().getConsoleSender();
         logger = new PluginLogger();
         scheduler = new GlobalScheduler().getScheduler();
 
-        instance = this;
 
         if (!dataFolder.toFile().exists() && !dataFolder.toFile().mkdirs()) {
             throw new RuntimeException("Failed to create data folder. This may be due to insufficient permissions.");
