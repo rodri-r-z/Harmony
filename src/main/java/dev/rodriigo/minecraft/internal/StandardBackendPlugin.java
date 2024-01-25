@@ -25,6 +25,8 @@ public interface StandardBackendPlugin {
 
     void safeSaveFrom(String resourcePath, Path destinationPath, boolean replace);
 
+    String getProvidedPluginName();
+
     PluginLogger getOwnLogger();
 
     NormalizedScheduler findScheduler();

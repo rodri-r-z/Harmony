@@ -12,17 +12,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PluginLogger {
-
     static final BackendPlugin instance = BackendPlugin.getInstance();
     static final Logger baseLogger = instance.getLogger();
     static final CommandSender console = instance.getConsole();
 
+    static final String CONSOLE_PREFIX = "["+instance.getProvidedPluginName()+"] ";
+    static final String INFO_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&9[Info] ");
+    static final String WARN_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&6[Warn] ");
+    static final String ERROR_PREFIX = CONSOLE_PREFIX+ ChatColor.translateAlternateColorCodes('&', "&c[Err] ");
+
+
     public void info(String message) {
-        baseLogger.info(message);
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        console.sendMessage(INFO_PREFIX + message);
     }
 
     public void info(Supplier<String> messages) {
-        baseLogger.info(messages);
+        console.sendMessage(INFO_PREFIX +
+                ChatColor.translateAlternateColorCodes('&',
+                        messages.get()
+                )
+        );
     }
 
     public void fine(String message) {
@@ -50,15 +60,21 @@ public class PluginLogger {
     }
 
     public void severe(String message) {
-        baseLogger.severe(message);
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        console.sendMessage(ERROR_PREFIX + message);
     }
 
     public void warn(String message) {
-        baseLogger.warning(message);
+        message = ChatColor.translateAlternateColorCodes('&', message);
+        console.sendMessage(WARN_PREFIX + message);
     }
 
     public void warn(Supplier<String> messages) {
-        baseLogger.warning(messages);
+        console.sendMessage(WARN_PREFIX +
+                ChatColor.translateAlternateColorCodes('&',
+                        messages.get()
+                )
+        );
     }
 
     public void warning(String message) {
@@ -99,11 +115,5 @@ public class PluginLogger {
 
     public String getName() {
         return baseLogger.getName();
-    }
-
-    public void sendColoredMessage(String message) {
-        console.sendMessage(
-                ChatColor.translateAlternateColorCodes('&', message)
-        );
     }
 }

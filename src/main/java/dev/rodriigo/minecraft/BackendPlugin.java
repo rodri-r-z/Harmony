@@ -147,4 +147,9 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String getProvidedPluginName() {
+        return getDescription().getName();
+    }
 }
