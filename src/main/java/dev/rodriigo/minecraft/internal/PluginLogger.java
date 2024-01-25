@@ -46,7 +46,7 @@ public class PluginLogger {
     }
 
     public void warn(Object message) {
-        info(String.valueOf(message));
+        warn(String.valueOf(message));
     }
 
     public void warning(String message) {
@@ -57,14 +57,14 @@ public class PluginLogger {
         warn(messages);
     }
     public void warning(Object message) {
-        info(String.valueOf(message));
+        warn(String.valueOf(message));
     }
 
     public void error(String message) {
         severe(message);
     }
     public void error(Object message) {
-        info(String.valueOf(message));
+        severe(String.valueOf(message));
     }
 
     public void fine(String message) {
