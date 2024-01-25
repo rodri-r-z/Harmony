@@ -3,7 +3,10 @@ package dev.rodriigo.minecraft.scheduler;
 
 import dev.rodriigo.minecraft.BackendPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
+
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class FoliaScheduler implements NormalizedScheduler {
 
@@ -34,13 +37,14 @@ public class FoliaScheduler implements NormalizedScheduler {
 
     public FoliaScheduler() throws Exception {}
 
+    @Override
     public void run(Runnable runnable) {
         try {
             globalRegionScheduler
                     .getClass()
                     .getMethod(
                             "execute",
-                            JavaPlugin.class,
+                            Plugin.class,
                             Runnable.class
                     ).invoke(
                             globalRegionScheduler,
@@ -52,19 +56,20 @@ public class FoliaScheduler implements NormalizedScheduler {
         }
     }
 
+    @Override
     public void runLater(Runnable runnable, long delayTicks) {
         try {
             globalRegionScheduler
                     .getClass()
                     .getMethod(
                             "runDelayed",
-                            JavaPlugin.class,
-                            Runnable.class,
+                            Plugin.class,
+                            Consumer.class,
                             long.class
                     ).invoke(
                             globalRegionScheduler,
                             plugin,
-                            runnable,
+                            getConsumer(runnable),
                             delayTicks
                     );
         } catch (Exception e) {
@@ -78,14 +83,14 @@ public class FoliaScheduler implements NormalizedScheduler {
                     .getClass()
                     .getMethod(
                             "runAtFixedRate",
-                            JavaPlugin.class,
-                            Runnable.class,
+                            Plugin.class,
+                            Consumer.class,
                             long.class,
                             long.class
                     ).invoke(
                             globalRegionScheduler,
                             plugin,
-                            runnable,
+                            getConsumer(runnable),
                             delayTicks < 1 ? 1 : delayTicks,
                             periodTicks
                     );
@@ -94,17 +99,24 @@ public class FoliaScheduler implements NormalizedScheduler {
         }
     }
 
+    @Override
     // Added: Execute tasks asynchronously
     public void runAsync(Runnable runnable) {
         run(runnable);
     }
 
+    @Override
     public void runAsyncLater(Runnable runnable, long delayTicks) {
         runLater(runnable, delayTicks);
     }
 
+    @Override
     public void runAsyncTimer(Runnable runnable, long delayTicks, long periodTicks) {
         runTimer(runnable, delayTicks, periodTicks);
+    }
+
+    Consumer<?> getConsumer(Runnable runnable) {
+        return (ignored) -> runnable.run();
     }
 
 }

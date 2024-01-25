@@ -90,5 +90,4 @@ public final class GreenShield extends BackendPlugin {
         // Plugin shutdown logic
     }
 }
-
 ```
