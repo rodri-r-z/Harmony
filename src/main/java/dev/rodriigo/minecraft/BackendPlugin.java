@@ -1,6 +1,7 @@
 package dev.rodriigo.minecraft;
 
 import dev.rodriigo.minecraft.annotation.Nullable;
+import dev.rodriigo.minecraft.packet.RegisteredPacketMode;
 import dev.rodriigo.minecraft.scheduler.GlobalScheduler;
 import dev.rodriigo.minecraft.scheduler.NormalizedScheduler;
 import dev.rodriigo.minecraft.internal.PluginLogger;
@@ -23,6 +24,8 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     protected NormalizedScheduler scheduler;
 
     static BackendPlugin instance;
+    static boolean isLegacy;
+    static boolean isFolia;
 
     @Override
     public void onEnable() {
@@ -35,6 +38,18 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
         logger = new PluginLogger();
         scheduler = new GlobalScheduler().getScheduler();
 
+        // Legacy servers are considered servers running 1.12 or lower
+        // For text coloring purposes, we'll consider legacy versions under 1.16.5
+        // To make sure the server is under that version, we'll use reflection to check
+        try {
+            // NMS is used in 1.16.5 and later
+            isLegacy = server.getClass().getPackage().getName().startsWith("net.minecraft.server");
+        } catch (Exception e) {
+            isLegacy = true;
+        }
+
+        // If the server is running Folia, the Bukkit version will include "Folia"
+        isFolia = getServer().getBukkitVersion().contains("Folia");
 
         if (!dataFolder.toFile().exists() && !dataFolder.toFile().mkdirs()) {
             throw new RuntimeException("Failed to create data folder. This may be due to insufficient permissions.");
@@ -151,5 +166,24 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     @Override
     public String getProvidedPluginName() {
         return getDescription().getName();
+    }
+
+    @Override
+    public boolean isLegacy() {
+        return isLegacy;
+    }
+
+    @Override
+    public boolean isFolia() {
+        return isFolia;
+    }
+
+    @Override
+    public RegisteredPacketMode initPacketMode() {
+        // Check if ProtocolLib is enabled
+        if (server.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            return new RegisteredPacketMode();
+        }
+        throw new RuntimeException("ProtocolLib is not enabled! Please enable ProtocolLib to use this plugin.");
     }
 }

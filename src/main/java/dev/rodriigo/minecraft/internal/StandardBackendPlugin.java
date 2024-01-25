@@ -1,6 +1,9 @@
 package dev.rodriigo.minecraft.internal;
 
+import dev.rodriigo.minecraft.BackendPlugin;
+import dev.rodriigo.minecraft.packet.RegisteredPacketMode;
 import dev.rodriigo.minecraft.scheduler.NormalizedScheduler;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.InputStream;
@@ -32,4 +35,11 @@ public interface StandardBackendPlugin {
     NormalizedScheduler findScheduler();
 
     YamlConfiguration getConfiguration();
+
+    CommandSender getConsole();
+
+    boolean isLegacy();
+    boolean isFolia();
+
+    RegisteredPacketMode initPacketMode();
 }
