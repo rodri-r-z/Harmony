@@ -42,8 +42,10 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
         // For text coloring purposes, we'll consider legacy versions under 1.16.5
         // To make sure the server is under that version, we'll use reflection to check
         try {
-            // NMS is used in 1.16.5 and later
-            isLegacy = server.getClass().getPackage().getName().startsWith("net.minecraft.server");
+            // Ancient debris was added on 1.16.5, that means we can use reflection to check
+            // If the server is running a version older than 1.16.5, it will throw an exception
+            Class.forName("org.bukkit.Material.ANCIENT_DEBRIS");
+            isLegacy = false;
         } catch (Exception e) {
             isLegacy = true;
         }
