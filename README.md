@@ -67,3 +67,28 @@ yourself into your `pom.xml` or `build.gradle` (or changing class path with the 
 ---
 
 **Example Plugin**: Here's an example plugin using ProMinecraft
+
+```java
+package dev.rodrigo.greenshield;
+
+import dev.rodriigo.minecraft.BackendPlugin;
+import dev.rodriigo.minecraft.internal.PluginLogger;
+
+public final class GreenShield extends BackendPlugin {
+
+    @Override
+    public void whenInitialize() {
+        final PluginLogger logger = getOwnLogger();
+        logger.info("&aHello world!");
+        logger.info(
+                isLegacy()
+        );
+    }
+
+    @Override
+    public void whenUnloaded() {
+        // Plugin shutdown logic
+    }
+}
+
+```
