@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public abstract class MessageColorFormatter {
 
-    static Pattern HEX_PATTERN = Pattern.compile("#[0-9a-fA-F]{6}");
+    static Pattern HEX_PATTERN = Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$");
     static boolean IS_LEGACY = BackendPlugin.getInstance().isLegacy();
 
     public static String colorize(String message) {

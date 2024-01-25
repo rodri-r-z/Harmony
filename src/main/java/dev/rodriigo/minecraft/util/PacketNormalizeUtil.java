@@ -20,6 +20,12 @@ public abstract class PacketNormalizeUtil {
     * (i.e. SYSTEM_CHAT packets got strings null when the server is using PaperMC)
     * */
 
+    /**
+     * Get the JSON content from SYSTEM_CHAT and CHAT packets
+     *
+     * @param  packet   the packet to be checked
+     * @return          the clientBoundSystemChatPacket or null
+     */
     @Nullable
     public static Object fromSystemChatPacket(PacketContainer packet) {
         // Check if the packet is a SYSTEM_CHAT packet
@@ -59,6 +65,12 @@ public abstract class PacketNormalizeUtil {
         return packet.getStrings().read(0);
     }
 
+    /**
+     * Sends a JSON component to a player
+     *
+     * @param  JSON   the JSON component to send
+     * @param  player the player to send the JSON component to
+     */
     public static void sendComponent(String JSON, Player player) {
         // Sends a JSON component to a player
         // To ensure backwards compatibility, we'll use packets
@@ -82,6 +94,12 @@ public abstract class PacketNormalizeUtil {
         RegisteredPacketMode.getProtocolManager().sendServerPacket(player, packet);
     }
 
+    /**
+     * Sends a BaseComponent to a player
+     *
+     * @param  component  the BaseComponent to send
+     * @param  player     the player to send the BaseComponent to
+     */
     public static void sendComponent(BaseComponent component, Player player) {
         // Sends a BaseComponent to a player
         sendComponent(
@@ -90,6 +108,12 @@ public abstract class PacketNormalizeUtil {
         );
     }
 
+    /**
+     * Sends an array of BaseComponents to a player
+     *
+     * @param  components  the array of BaseComponents to send
+     * @param  player      the player to send the components to
+     */
     public static void sendComponent(BaseComponent[] components, Player player) {
         // Sends an array of BaseComponents to a player
         sendComponent(

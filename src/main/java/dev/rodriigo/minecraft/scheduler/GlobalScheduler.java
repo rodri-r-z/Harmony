@@ -28,6 +28,11 @@ public class GlobalScheduler {
         }
     }
 
+    /**
+     * Get the scheduler.
+     *
+     * @return         	the scheduler
+     */
     public NormalizedScheduler getScheduler() {
         return scheduler;
     }

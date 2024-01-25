@@ -35,6 +35,11 @@ public abstract class CommandUtil {
     // Utility class to dynamically create commands
     // And listen for chat commands without registering them
 
+    /**
+     * Registers a listener for a command, taking into account whether it is a legacy command.
+     *
+     * @param  listener  the listener to be registered
+     */
     public static void registerListener(UnregisteredCommandListener listener) {
         // Check if legacy
         if (BackendPlugin.getInstance().isLegacy()) {
@@ -44,6 +49,12 @@ public abstract class CommandUtil {
         new CommandPacketListener(listener.getCommandName(), listener, true);
     }
 
+    /**
+     * Registers a listener for the given command name and executor.
+     *
+     * @param  commandName  the name of the command to register the listener for
+     * @param  executor     the command executor to register
+     */
     public static void registerListener(String commandName, CommandExecutor executor) {
         final PluginCommand command = instance.getCommand(commandName);
         // Check if command is null
@@ -53,6 +64,11 @@ public abstract class CommandUtil {
         command.setExecutor(executor);
     }
 
+    /**
+     * Register a dynamic command listener.
+     *
+     * @param  listener   the dynamic command listener to register
+     */
     public static void registerListener(DynamicCommandListener listener) {
         try {
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
