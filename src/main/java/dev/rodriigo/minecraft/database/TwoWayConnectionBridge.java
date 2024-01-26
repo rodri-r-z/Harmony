@@ -18,6 +18,8 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
     BackendPlugin backendPlugin = BackendPlugin.getInstance();
     NoSQLConnectionBridge noSQLConnectionBridge;
     SQLConnectionBridge sqlConnectionBridge;
+    RelationalBridge relationalBridge;
+    List<String> sqlTables = new ArrayList<>();
 
 
     public TwoWayConnectionBridge(File configFile) throws Exception {
@@ -49,13 +51,16 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
             noSQLConnectionBridge = new NoSQLConnectionBridge(mongoDB);
         } else if (driver.equalsIgnoreCase("sqlite")) {
             // Create a connection to SQLite
-            connection = RelationalBridge.fromSqlite(
+            RelationalBridge relationalBridge = RelationalBridge.fromSqlite(
                     backendPlugin.getDataFolder()
                             .toPath()
                             .resolve(database)
                             .toString()
-            ).getConnection();
+            );
 
+            sqlTables = relationalBridge.getTables();
+            connection = relationalBridge.getConnection();
+            this.relationalBridge = relationalBridge;
             sqlConnectionBridge = new SQLConnectionBridge(connection);
         } else if (driver.equalsIgnoreCase("mysql")) {
             // Create a connection to MySQL
@@ -72,13 +77,17 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
             if (password == null) {
                 throw new Exception("MySQL Password is null into the configuration file. Please check the file.");
             }
-            connection = new RelationalBridge(
+            RelationalBridge relationalBridge = new RelationalBridge(
                     host,
                     port,
                     database,
                     username,
                     password
-            ).getConnection();
+            );
+
+            sqlTables = relationalBridge.getTables();
+            connection = relationalBridge.getConnection();
+            this.relationalBridge = relationalBridge;
 
             sqlConnectionBridge = new SQLConnectionBridge(connection);
         } else {
@@ -316,6 +325,38 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
      * @return       true if the table name is invalid, false otherwise
      */
     boolean isTableNameInvalid(String table) {
-        return !StringUtil.strictMatches(table, "^[a-zA-Z_][a-zA-Z0-9_]*$");
+        return !StringUtil.strictMatches(table, "^[a-zA-Z_][a-zA-Z0-9_]*$")
+                || ( connection != null && !sqlTables.contains(table) )
+                || ( mongoDB != null && mongoDB.getCollection(table) == null );
+    }
+
+    @Override
+    public void syncTables() {
+        // This method should only be used with SQL database.
+        // MongoDB does not support this function.
+        try {
+            if (relationalBridge != null) {
+                relationalBridge.bumpTables();
+                sqlTables = relationalBridge.getTables();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Closes the connection to the SQL or NoSQL database, depending on which bridge is set.
+     */
+    @Override
+    public void close() {
+        try {
+            if (sqlConnectionBridge != null) {
+                sqlConnectionBridge.close();
+            } else if (noSQLConnectionBridge != null) {
+                noSQLConnectionBridge.close();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

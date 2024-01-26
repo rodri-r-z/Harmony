@@ -176,6 +176,22 @@ public class NoSQLConnectionBridge implements NormalizedDatabaseBridge {
         }
     }
 
+    @Override
+    public void close() {
+        try {
+            if (mongoDB != null) {
+                mongoDB.close();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void syncTables() {
+        // Ignore, this is not supported here
+    }
+
     boolean isTableNameInvalid(String table) {
         return !StringUtil.strictMatches(table, "^[a-zA-Z_][a-zA-Z0-9_]*$");
     }

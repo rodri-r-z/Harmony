@@ -5,12 +5,14 @@ import dev.rodriigo.minecraft.util.MessageColorFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class PluginLogger {
     static final BackendPlugin instance = BackendPlugin.getInstance();
@@ -35,6 +37,9 @@ public class PluginLogger {
     public void info(Object message) {
         info(String.valueOf(message));
     }
+    public void info(Object... message) {
+        Arrays.stream(message).collect(Collectors.toList()).forEach(this::info);
+    }
 
     public void warn(String message) {
         message = MessageColorFormatter.colorize(message);
@@ -48,6 +53,9 @@ public class PluginLogger {
     public void warn(Object message) {
         warn(String.valueOf(message));
     }
+    public void warn(Object[] message) {
+        Arrays.stream(message).collect(Collectors.toList()).forEach(this::warn);
+    }
 
     public void warning(String message) {
         warn(message);
@@ -59,12 +67,20 @@ public class PluginLogger {
     public void warning(Object message) {
         warn(String.valueOf(message));
     }
-
+    public void warning(Object[] message) {
+        Arrays.stream(message).collect(Collectors.toList()).forEach(this::warn);
+    }
     public void error(String message) {
         severe(message);
     }
     public void error(Object message) {
         severe(String.valueOf(message));
+    }
+    public void error(Object[] message) {
+        Arrays.stream(message).collect(Collectors.toList()).forEach(this::error);
+    }
+    public void severe(Object[] message) {
+        Arrays.stream(message).collect(Collectors.toList()).forEach(this::severe);
     }
 
     public void fine(String message) {
@@ -94,6 +110,14 @@ public class PluginLogger {
     public void severe(String message) {
         message = MessageColorFormatter.colorize(message);
         console.sendMessage(ERROR_PREFIX + message);
+    }
+
+    public void severe(Supplier<String> messages) {
+        severe(messages.get());
+    }
+
+    public void severe(Object messages) {
+        severe(String.valueOf(messages));
     }
 
     public void addHandler(Handler handler) {

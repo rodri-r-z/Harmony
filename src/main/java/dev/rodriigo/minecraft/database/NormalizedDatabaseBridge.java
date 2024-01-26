@@ -16,5 +16,7 @@ public interface NormalizedDatabaseBridge {
     void insertInto(String table, Iterable<Map<String, Object>> query);
     void dropTable(String table);
     void dropDatabase(String table);
+    void close();
+    void syncTables();
 
 }

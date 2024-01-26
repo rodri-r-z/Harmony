@@ -220,6 +220,29 @@ public class SQLConnectionBridge implements NormalizedDatabaseBridge {
         }
     }
 
+    @Override
+    public void close() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void syncTables() { /* Ignore */ }
+
+    public List<String> syncTables(RelationalBridge bridge) {
+        try {
+            bridge.bumpTables();
+            return bridge.getTables();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     boolean isTableNameInvalid(String table) {
         return !StringUtil.strictMatches(table, "^[a-zA-Z_][a-zA-Z0-9_]*$");
     }

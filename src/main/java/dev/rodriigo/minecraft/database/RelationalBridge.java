@@ -1,11 +1,31 @@
 package dev.rodriigo.minecraft.database;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RelationalBridge {
 
     Connection connection;
+    // Database security is a very important thing
+    // To keep the security, we'll bump all tables into a string list
+    // This way we can get all existing tables and detect if someone
+    // is trying to query an invalid table
+    List<String> tables = new ArrayList<>();
+
+    void bumpTables() throws Exception {
+        if (connection == null) return;
+        tables.clear();
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "%", new String[] {"TABLE"});
+        while (tables.next()) {
+            this.tables.add(tables.getString("TABLE_NAME"));
+        }
+    }
+
 
     public static RelationalBridge fromSqlite(String database) {
         try {
@@ -34,6 +54,8 @@ public class RelationalBridge {
         // Constructor for MySQL
         try {
             connection = DriverManager.getConnection("jdbc:mysql:" + host + "/" + database+"?autoReconnect=true", username, password);
+
+            bumpTables();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -50,6 +72,8 @@ public class RelationalBridge {
         // Constructor for MySQL
         try {
             connection = DriverManager.getConnection("jdbc:mysql:" + host + ":" + port + "/" + database+"?autoReconnect=true", username, password);
+
+            bumpTables();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,6 +91,10 @@ public class RelationalBridge {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public List<String> getTables() {
+        return tables;
     }
 
     public void close() {
