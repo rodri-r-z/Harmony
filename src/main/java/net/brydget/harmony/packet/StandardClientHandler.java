@@ -3,19 +3,17 @@ package net.brydget.harmony.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class StandardClientHandleListener implements ClientPacketHandleInterface {
+public abstract class StandardClientHandler implements ClientPacketHandleInterface {
+    StandardClientHandler thisArg = this;
 
-    public StandardClientHandleListener() {
+    public StandardClientHandler() {
         Arrays.stream(this.getClass().getMethods())
                 .filter(a -> a.getName().toUpperCase().equals(a.getName()))
                 .forEach(a -> {
                     try {
-                        final PacketType packetType = (PacketType) PacketType.Play.Client.class.getField(a.getName()).get(PacketType.class);
+                        final PacketType packetType = (PacketType) PacketType.Play.Client.class.getField(a.getName()).get(PacketType.Play.Client.class);
                         if (!packetType.isSupported()) return;
 
                         RegisteredPacketMode.getProtocolManager()
@@ -25,7 +23,7 @@ public abstract class StandardClientHandleListener implements ClientPacketHandle
                                     @Override
                                     public void whenClientBoundFired(PacketEvent packet) {
                                         try {
-                                            a.invoke(this, packet);
+                                            a.invoke(thisArg, packet);
                                         } catch (Exception e) {
                                             throw new RuntimeException(e);
                                         }
@@ -34,7 +32,7 @@ public abstract class StandardClientHandleListener implements ClientPacketHandle
                                     @Override
                                     public void whenServerBoundFired(PacketEvent packet) {
                                         try {
-                                            a.invoke(this, packet);
+                                            a.invoke(thisArg, packet);
                                         } catch (Exception e) {
                                             throw new RuntimeException(e);
                                         }

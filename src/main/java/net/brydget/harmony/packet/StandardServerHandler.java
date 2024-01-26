@@ -7,12 +7,14 @@ import java.util.Arrays;
 
 public abstract class StandardServerHandler implements ServerPacketHandleInterface {
 
+    StandardServerHandler thisArg = this;
+
     public StandardServerHandler() {
         Arrays.stream(this.getClass().getMethods())
                 .filter(a -> a.getName().toUpperCase().equals(a.getName()))
                 .forEach(a -> {
                     try {
-                        final PacketType packetType = (PacketType) PacketType.Play.Server.class.getField(a.getName()).get(PacketType.class);
+                        final PacketType packetType = (PacketType) PacketType.Play.Server.class.getField(a.getName()).get(PacketType.Play.Server.class);
                         if (!packetType.isSupported()) return;
 
                         RegisteredPacketMode.getProtocolManager()
@@ -22,7 +24,7 @@ public abstract class StandardServerHandler implements ServerPacketHandleInterfa
                                     @Override
                                     public void whenClientBoundFired(PacketEvent packet) {
                                         try {
-                                            a.invoke(this, packet);
+                                            a.invoke(thisArg, packet);
                                         } catch (Exception e) {
                                             throw new RuntimeException(e);
                                         }
@@ -31,7 +33,7 @@ public abstract class StandardServerHandler implements ServerPacketHandleInterfa
                                     @Override
                                     public void whenServerBoundFired(PacketEvent packet) {
                                         try {
-                                            a.invoke(this, packet);
+                                            a.invoke(thisArg, packet);
                                         } catch (Exception e) {
                                             throw new RuntimeException(e);
                                         }
