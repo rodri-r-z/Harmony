@@ -71,7 +71,7 @@ yourself into your `pom.xml` or `build.gradle` (or changing class path with the 
 package dev.rodrigo.greenshield;
 
 import net.brydget.BackendPlugin;
-import internal.net.brydget.PluginLogger;
+import net.brydget.internal.PluginLogger;
 
 public final class GreenShield extends BackendPlugin {
 
