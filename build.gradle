@@ -28,6 +28,7 @@ repositories {
     }
 
     maven { url = "https://repo.onarandombox.com/content/groups/public/" }
+    maven { url 'https://nexus.scarsz.me/content/groups/public/' }
 
 }
 
@@ -41,6 +42,7 @@ dependencies {
     compileOnly 'net.dv8tion:JDA:5.0.0-beta.20'
     compileOnly("com.onarandombox.multiversecore:Multiverse-Core:4.3.2-SNAPSHOT")
 
+    compileOnly 'com.discordsrv:discordsrv:1.26.2'
 }
 
 def targetJavaVersion = 8

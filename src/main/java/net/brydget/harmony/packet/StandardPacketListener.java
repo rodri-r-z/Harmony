@@ -10,7 +10,7 @@ import net.brydget.harmony.listener.RegisteredPacketListener;
 
 public abstract class StandardPacketListener extends PacketAdapter implements RegisteredPacketListener {
 
-    public StandardPacketListener(PacketType[] types) {
+    public StandardPacketListener(PacketType... types) {
         super(
                 BackendPlugin.getInstance(),
                 types
