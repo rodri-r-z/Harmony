@@ -1,5 +1,8 @@
 ![Harmony](./assets/logo.png)
 
+[![](https://www.jitpack.io/v/rodri-r-z/Harmony.svg)](https://www.jitpack.io/#rodri-r-z/Harmony)
+
+
 ![Harmony](./assets/banner.png)
 
 ---
