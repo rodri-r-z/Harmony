@@ -3,144 +3,44 @@ package net.brydget.harmony.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketEvent;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class StandardServerHandler extends StandardPacketListener implements ServerPacketHandleInterface {
-
-    Map<String, Method> methods = new ConcurrentHashMap<>();
+public abstract class StandardServerHandler implements ServerPacketHandleInterface {
 
     public StandardServerHandler() {
-        super(
-                PacketType.Play.Server.ABILITIES,
-                PacketType.Play.Server.ADVANCEMENTS,
-                PacketType.Play.Server.ANIMATION,
-                PacketType.Play.Server.ATTACH_ENTITY,
-                PacketType.Play.Server.AUTO_RECIPE,
-                PacketType.Play.Server.BLOCK_ACTION,
-                PacketType.Play.Server.BLOCK_BREAK_ANIMATION,
-                PacketType.Play.Server.BLOCK_CHANGE,
-                PacketType.Play.Server.BLOCK_CHANGED_ACK,
-                PacketType.Play.Server.BOSS,
-                PacketType.Play.Server.BUNDLE,
-                PacketType.Play.Server.CAMERA,
-                PacketType.Play.Server.CHAT,
-                PacketType.Play.Server.CHUNKS_BIOMES,
-                PacketType.Play.Server.CLEAR_TITLES,
-                PacketType.Play.Server.CLOSE_WINDOW,
-                PacketType.Play.Server.COLLECT,
-                PacketType.Play.Server.COMMANDS,
-                PacketType.Play.Server.CUSTOM_CHAT_COMPLETIONS,
-                PacketType.Play.Server.CUSTOM_PAYLOAD,
-                PacketType.Play.Server.DAMAGE_EVENT,
-                PacketType.Play.Server.DELETE_CHAT_MESSAGE,
-                PacketType.Play.Server.DISGUISED_CHAT,
-                PacketType.Play.Server.ENTITY_DESTROY,
-                PacketType.Play.Server.ENTITY_EFFECT,
-                PacketType.Play.Server.ENTITY_EQUIPMENT,
-                PacketType.Play.Server.ENTITY_HEAD_ROTATION,
-                PacketType.Play.Server.ENTITY_LOOK,
-                PacketType.Play.Server.ENTITY_METADATA,
-                PacketType.Play.Server.ENTITY_SOUND,
-                PacketType.Play.Server.ENTITY_STATUS,
-                PacketType.Play.Server.ENTITY_TELEPORT,
-                PacketType.Play.Server.ENTITY_VELOCITY,
-                PacketType.Play.Server.EXPERIENCE,
-                PacketType.Play.Server.EXPLOSION,
-                PacketType.Play.Server.GAME_STATE_CHANGE,
-                PacketType.Play.Server.HELD_ITEM_SLOT,
-                PacketType.Play.Server.HURT_ANIMATION,
-                PacketType.Play.Server.INITIALIZE_BORDER,
-                PacketType.Play.Server.KEEP_ALIVE,
-                PacketType.Play.Server.KICK_DISCONNECT,
-                PacketType.Play.Server.LIGHT_UPDATE,
-                PacketType.Play.Server.LOGIN,
-                PacketType.Play.Server.LOOK_AT,
-                PacketType.Play.Server.MAP,
-                PacketType.Play.Server.MAP_CHUNK,
-                PacketType.Play.Server.MOUNT,
-                PacketType.Play.Server.MULTI_BLOCK_CHANGE,
-                PacketType.Play.Server.NAMED_ENTITY_SPAWN,
-                PacketType.Play.Server.NAMED_SOUND_EFFECT,
-                PacketType.Play.Server.NBT_QUERY,
-                PacketType.Play.Server.OPEN_BOOK,
-                PacketType.Play.Server.OPEN_SIGN_EDITOR,
-                PacketType.Play.Server.OPEN_WINDOW,
-                PacketType.Play.Server.OPEN_WINDOW_HORSE,
-                PacketType.Play.Server.OPEN_WINDOW_MERCHANT,
-                PacketType.Play.Server.PING,
-                PacketType.Play.Server.PLAYER_COMBAT_END,
-                PacketType.Play.Server.PLAYER_COMBAT_ENTER,
-                PacketType.Play.Server.PLAYER_COMBAT_KILL,
-                PacketType.Play.Server.PLAYER_INFO,
-                PacketType.Play.Server.PLAYER_INFO_REMOVE,
-                PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER,
-                PacketType.Play.Server.POSITION,
-                PacketType.Play.Server.RECIPE_UPDATE,
-                PacketType.Play.Server.RECIPES,
-                PacketType.Play.Server.REL_ENTITY_MOVE,
-                PacketType.Play.Server.REL_ENTITY_MOVE_LOOK,
-                PacketType.Play.Server.REMOVE_ENTITY_EFFECT,
-                PacketType.Play.Server.RESOURCE_PACK_SEND,
-                PacketType.Play.Server.RESPAWN,
-                PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE,
-                PacketType.Play.Server.SCOREBOARD_OBJECTIVE,
-                PacketType.Play.Server.SCOREBOARD_SCORE,
-                PacketType.Play.Server.SCOREBOARD_TEAM,
-                PacketType.Play.Server.SELECT_ADVANCEMENT_TAB,
-                PacketType.Play.Server.SERVER_DATA,
-                PacketType.Play.Server.SERVER_DIFFICULTY,
-                PacketType.Play.Server.SET_ACTION_BAR_TEXT,
-                PacketType.Play.Server.SET_BORDER_CENTER,
-                PacketType.Play.Server.SET_BORDER_LERP_SIZE,
-                PacketType.Play.Server.SET_BORDER_SIZE,
-                PacketType.Play.Server.SET_BORDER_WARNING_DELAY,
-                PacketType.Play.Server.SET_BORDER_WARNING_DISTANCE,
-                PacketType.Play.Server.SET_COOLDOWN,
-                PacketType.Play.Server.SET_SLOT,
-                PacketType.Play.Server.SET_SUBTITLE_TEXT,
-                PacketType.Play.Server.SET_TITLE_TEXT,
-                PacketType.Play.Server.SET_TITLES_ANIMATION,
-                PacketType.Play.Server.SPAWN_ENTITY,
-                PacketType.Play.Server.SPAWN_ENTITY_EXPERIENCE_ORB,
-                PacketType.Play.Server.SPAWN_POSITION,
-                PacketType.Play.Server.STATISTIC,
-                PacketType.Play.Server.STOP_SOUND,
-                PacketType.Play.Server.SYSTEM_CHAT,
-                PacketType.Play.Server.TAB_COMPLETE,
-                PacketType.Play.Server.TAGS,
-                PacketType.Play.Server.TILE_ENTITY_DATA,
-                PacketType.Play.Server.UNLOAD_CHUNK,
-                PacketType.Play.Server.UPDATE_ATTRIBUTES,
-                PacketType.Play.Server.UPDATE_ENABLED_FEATURES,
-                PacketType.Play.Server.UPDATE_HEALTH,
-                PacketType.Play.Server.UPDATE_SIMULATION_DISTANCE,
-                PacketType.Play.Server.UPDATE_TIME,
-                PacketType.Play.Server.VEHICLE_MOVE,
-                PacketType.Play.Server.VIEW_CENTRE,
-                PacketType.Play.Server.VIEW_DISTANCE,
-                PacketType.Play.Server.WINDOW_DATA,
-                PacketType.Play.Server.WINDOW_ITEMS,
-                PacketType.Play.Server.WORLD_EVENT,
-                PacketType.Play.Server.WORLD_PARTICLES
-        );
-
-        // Store all methods
         Arrays.stream(this.getClass().getMethods())
                 .filter(a -> a.getName().toUpperCase().equals(a.getName()))
-                .forEach(a -> methods.put(a.getName(), a));
-    }
+                .forEach(a -> {
+                    try {
+                        final PacketType packetType = (PacketType) PacketType.Play.Server.class.getField(a.getName()).get(PacketType.class);
+                        if (!packetType.isSupported()) return;
 
-    @Override
-    public void whenClientBoundFired(PacketEvent event) {
-        String name = event.getPacketType().name();
-        try {
-            methods.get(name).invoke(this, event);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+                        RegisteredPacketMode.getProtocolManager()
+                                .addPacketListener(new StandardPacketListener(
+                                        packetType
+                                ) {
+                                    @Override
+                                    public void whenClientBoundFired(PacketEvent packet) {
+                                        try {
+                                            a.invoke(this, packet);
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void whenServerBoundFired(PacketEvent packet) {
+                                        try {
+                                            a.invoke(this, packet);
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                });
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
 

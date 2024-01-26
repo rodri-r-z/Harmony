@@ -6,11 +6,12 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import net.brydget.harmony.BackendPlugin;
+import net.brydget.harmony.annotation.NeverNull;
 import net.brydget.harmony.listener.RegisteredPacketListener;
 
 public abstract class StandardPacketListener extends PacketAdapter implements RegisteredPacketListener {
 
-    public StandardPacketListener(PacketType... types) {
+    public StandardPacketListener(@NeverNull PacketType... types) {
         super(
                 BackendPlugin.getInstance(),
                 types
@@ -24,7 +25,7 @@ public abstract class StandardPacketListener extends PacketAdapter implements Re
         );
     }
 
-    public StandardPacketListener(ListenerPriority priority, PacketType... types) {
+    public StandardPacketListener(ListenerPriority priority, @NeverNull PacketType... types) {
         super(
                 BackendPlugin.getInstance(),
                 priority,

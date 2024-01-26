@@ -8,83 +8,42 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StandardClientHandleListener extends StandardPacketListener implements ClientPacketHandleInterface {
-    // There are too many different packet types
-    // To make a conditional for each one
-    // Just store all methods in a map
-    // And we can dynamically call them
-    Map<String, Method> methods = new ConcurrentHashMap<>();
+public abstract class StandardClientHandleListener implements ClientPacketHandleInterface {
 
     public StandardClientHandleListener() {
-        super(
-                PacketType.Play.Client.ABILITIES,
-                PacketType.Play.Client.ADVANCEMENTS,
-                PacketType.Play.Client.ARM_ANIMATION,
-                PacketType.Play.Client.AUTO_RECIPE,
-                PacketType.Play.Client.B_EDIT,
-                PacketType.Play.Client.BEACON,
-                PacketType.Play.Client.BLOCK_DIG,
-                PacketType.Play.Client.BLOCK_PLACE,
-                PacketType.Play.Client.BOAT_MOVE,
-                PacketType.Play.Client.CHAT,
-                PacketType.Play.Client.CHAT_ACK,
-                PacketType.Play.Client.CHAT_COMMAND,
-                PacketType.Play.Client.CHAT_SESSION_UPDATE,
-                PacketType.Play.Client.CLIENT_COMMAND,
-                PacketType.Play.Client.CLOSE_WINDOW,
-                PacketType.Play.Client.CUSTOM_PAYLOAD,
-                PacketType.Play.Client.DIFFICULTY_CHANGE,
-                PacketType.Play.Client.DIFFICULTY_LOCK,
-                PacketType.Play.Client.ENCHANT_ITEM,
-                PacketType.Play.Client.ENTITY_ACTION,
-                PacketType.Play.Client.ENTITY_NBT_QUERY,
-                PacketType.Play.Client.GROUND,
-                PacketType.Play.Client.HELD_ITEM_SLOT,
-                PacketType.Play.Client.ITEM_NAME,
-                PacketType.Play.Client.JIGSAW_GENERATE,
-                PacketType.Play.Client.KEEP_ALIVE,
-                PacketType.Play.Client.LOOK,
-                PacketType.Play.Client.PICK_ITEM,
-                PacketType.Play.Client.PONG,
-                PacketType.Play.Client.POSITION,
-                PacketType.Play.Client.POSITION_LOOK,
-                PacketType.Play.Client.RECIPE_DISPLAYED,
-                PacketType.Play.Client.RECIPE_SETTINGS,
-                PacketType.Play.Client.RESOURCE_PACK_STATUS,
-                PacketType.Play.Client.SET_COMMAND_BLOCK,
-                PacketType.Play.Client.SET_COMMAND_MINECART,
-                PacketType.Play.Client.SET_CREATIVE_SLOT,
-                PacketType.Play.Client.SET_JIGSAW,
-                PacketType.Play.Client.SETTINGS,
-                PacketType.Play.Client.SPECTATE,
-                PacketType.Play.Client.STEER_VEHICLE,
-                PacketType.Play.Client.STRUCT,
-                PacketType.Play.Client.TAB_COMPLETE,
-                PacketType.Play.Client.TELEPORT_ACCEPT,
-                PacketType.Play.Client.TILE_NBT_QUERY,
-                PacketType.Play.Client.TR_SEL,
-                PacketType.Play.Client.UPDATE_SIGN,
-                PacketType.Play.Client.USE_ENTITY,
-                PacketType.Play.Client.USE_ITEM,
-                PacketType.Play.Client.VEHICLE_MOVE,
-                PacketType.Play.Client.WINDOW_CLICK
-        );
-
-        // Store all methods
         Arrays.stream(this.getClass().getMethods())
                 .filter(a -> a.getName().toUpperCase().equals(a.getName()))
-                .forEach(a -> methods.put(a.getName(), a));
+                .forEach(a -> {
+                    try {
+                        final PacketType packetType = (PacketType) PacketType.Play.Client.class.getField(a.getName()).get(PacketType.class);
+                        if (!packetType.isSupported()) return;
 
-    }
+                        RegisteredPacketMode.getProtocolManager()
+                                .addPacketListener(new StandardPacketListener(
+                                        packetType
+                                ) {
+                                    @Override
+                                    public void whenClientBoundFired(PacketEvent packet) {
+                                        try {
+                                            a.invoke(this, packet);
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
 
-    @Override
-    public void whenClientBoundFired(PacketEvent event) {
-        String name = event.getPacketType().name();
-        try {
-            methods.get(name).invoke(this, event);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+                                    @Override
+                                    public void whenServerBoundFired(PacketEvent packet) {
+                                        try {
+                                            a.invoke(this, packet);
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                });
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
 
