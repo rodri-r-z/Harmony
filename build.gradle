@@ -4,7 +4,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = 'dev.rodriigo.minecraft'
+group = 'net.brydget'
 version = '1.1.2'
 
 repositories {
@@ -22,6 +22,13 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
 
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+
+    maven { url = "https://repo.onarandombox.com/content/groups/public/" }
+
 }
 
 dependencies {
@@ -30,6 +37,9 @@ dependencies {
 
     compileOnly 'org.mongodb:mongodb-driver-sync:5.0.0-beta0'
     compileOnly "net.kyori:adventure-api:4.15.0"
+
+    compileOnly 'net.dv8tion:JDA:5.0.0-beta.20'
+    compileOnly("com.onarandombox.multiversecore:Multiverse-Core:4.3.2-SNAPSHOT")
 
 }
 

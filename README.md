@@ -1,13 +1,6 @@
-<h1 align="center">
-    <img src="./assets/mc.png" height="35">
-    ProMinecraft
-</h1>
+![Harmony](./assets/logo.png)
 
-<p align="center">
-    Under-Development Minecraft Plugin Framework.
-</p>
-
-<br>
+![Harmony](./assets/banner.png)
 
 ---
 
@@ -43,7 +36,7 @@
 
 **Documentation**: Read the **Wiki** for documentation. 
 
-[**Read JavaDoc**](https://rodri-r-z.github.io/ProMinecraft/docs/)
+[**Read JavaDoc**](https://rodri-r-z.github.io/Harmony/docs/)
 
 ---
 
@@ -69,13 +62,13 @@ yourself into your `pom.xml` or `build.gradle` (or changing class path with the 
 
 ---
 
-**Example Plugin**: Here's an example plugin using ProMinecraft
+**Example Plugin**: Here's an example plugin using Harmony
 
 ```java
 package dev.rodrigo.greenshield;
 
-import dev.rodriigo.minecraft.BackendPlugin;
-import dev.rodriigo.minecraft.internal.PluginLogger;
+import net.brydget.BackendPlugin;
+import internal.net.brydget.PluginLogger;
 
 public final class GreenShield extends BackendPlugin {
 
