@@ -70,8 +70,8 @@ yourself into your `pom.xml` or `build.gradle` (or changing class path with the 
 ```java
 package dev.rodrigo.greenshield;
 
-import net.brydget.BackendPlugin;
-import net.brydget.internal.PluginLogger;
+import net.brydget.harmony.BackendPlugin;
+import net.brydget.harmony.internal.PluginLogger;
 
 public final class GreenShield extends BackendPlugin {
 
