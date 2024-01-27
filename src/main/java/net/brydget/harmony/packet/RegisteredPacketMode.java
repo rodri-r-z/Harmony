@@ -13,6 +13,10 @@ public class RegisteredPacketMode {
         protocolManager.addPacketListener(listener);
     }
 
+    public void removeStandardListener(StandardPacketListener listener) {
+        protocolManager.removePacketListener(listener);
+    }
+
     public static ProtocolManager getProtocolManager() {
         return protocolManager;
     }
