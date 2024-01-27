@@ -13,7 +13,6 @@
 - **Spigot/Paper 1.8.x - 1.20.x**: Ensured and working without any problem
 - **Folia**: Works fine. This includes a built-in way to use the Folia Scheduler without problems.
 - **Any fork of Spigot/Paper** That doesn't change the API
-- **Bungee/Proxies AREN'T supported**, but will be.
 
 ---
 
