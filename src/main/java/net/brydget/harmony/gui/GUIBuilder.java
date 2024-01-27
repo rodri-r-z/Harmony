@@ -45,6 +45,9 @@ public class GUIBuilder {
     }
 
     public PaginatedGUI build() {
+        for (RegisteredGUI page : pages) {
+            inventories.add(page.build());
+        }
         return new PaginatedGUI();
     }
 
