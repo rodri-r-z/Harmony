@@ -9,7 +9,7 @@ import java.util.Map;
 public class RegisteredGUI {
 
     String title;
-    int width;
+    int size;
     Map<Integer, ItemStack> items;
 
     /**
@@ -27,11 +27,11 @@ public class RegisteredGUI {
     /**
      * Set the width of the GUI builder.
      *
-     * @param  width  the width to set
+     * @param  size  the width to set
      * @return       the GUI builder with the width set
      */
-    public RegisteredGUI setWidth(int width) {
-        this.width = width;
+    public RegisteredGUI setSize(int size) {
+        this.size = size;
         return this;
     }
 
@@ -64,7 +64,7 @@ public class RegisteredGUI {
      * @return         	the built Inventory object
      */
     public Inventory build() {
-        Inventory inv = Bukkit.createInventory(null, width, title);
+        Inventory inv = Bukkit.createInventory(null, size, title);
         items.forEach(inv::setItem);
 
         return inv;
