@@ -35,6 +35,8 @@
 
 **License**: [MIT License](./LICENSE.md)
 
+© Rodrigo R. 
+
 ---
 
 **Documentation**: Read the **Wiki** for documentation. 
@@ -90,3 +92,8 @@ public final class GreenShield extends BackendPlugin {
     }
 }
 ```
+
+---
+
+**Disclaimer:** The software is provided AS IS. I make serious efforts to make this work for you.
+However, I'm not taking responsibility for ANY usage of it.
