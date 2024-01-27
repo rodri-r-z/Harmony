@@ -8,26 +8,19 @@ import net.brydget.harmony.command.UnregisteredCommandListener;
 public class CommandPacketListener extends StandardPacketListener {
 
     String commandName;
+    String trimmedCommandName;
     UnregisteredCommandListener listener;
 
     public CommandPacketListener(String commandName, UnregisteredCommandListener listener) {
         super(
-                // We use CHAT instead of CHAT_COMMAND
-                // Because CHAT_COMMAND isn't available on legacy versions
-                PacketType.Play.Client.CHAT
-        );
-
-        this.commandName = "/"+commandName;
-        this.listener = listener;
-    }
-
-    public CommandPacketListener(String commandName, UnregisteredCommandListener listener, boolean ignored) {
-        super(
                 // When this constructor is instanced, that means the server isn't legacy
                 PacketType.Play.Client.CHAT_COMMAND
+                        .isSupported() ? PacketType.Play.Client.CHAT_COMMAND : PacketType.Play.Client.CHAT
         );
 
-        this.commandName = commandName;
+        this.commandName = (PacketType.Play.Client.CHAT_COMMAND
+                .isSupported() ? "" : "/") + commandName+" ";
+        trimmedCommandName = commandName.trim();
         this.listener = listener;
     }
 
@@ -37,7 +30,7 @@ public class CommandPacketListener extends StandardPacketListener {
         // Check for Packet type
         final String message = packetEvent.getPacket().getStrings().read(0);
 
-        if (message.startsWith(commandName)) {
+        if (message.startsWith(commandName) || message.equals(trimmedCommandName)) {
             final boolean result = listener.whenExecute(
                     message
                             .replaceFirst(commandName, "")
@@ -50,5 +43,10 @@ public class CommandPacketListener extends StandardPacketListener {
             // will not be sent to the console
             if (!result) packetEvent.setCancelled(true);
         }
+    }
+
+    @Override
+    public void whenServerBoundFired(PacketEvent event) {
+        whenClientBoundFired(event);
     }
 }

@@ -41,4 +41,6 @@ public interface StandardBackendPlugin {
     boolean isFolia();
 
     RegisteredPacketMode initPacketMode();
+
+    String getServerVersion();
 }

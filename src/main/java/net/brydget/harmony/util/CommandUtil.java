@@ -2,9 +2,9 @@ package net.brydget.harmony.util;
 
 import net.brydget.harmony.BackendPlugin;
 import net.brydget.harmony.command.DynamicCommandListener;
-import net.brydget.harmony.command.RealCommandListener;
 import net.brydget.harmony.command.UnregisteredCommandListener;
 import net.brydget.harmony.internal.CommandPacketListener;
+import net.brydget.harmony.packet.RegisteredPacketMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
@@ -42,11 +42,9 @@ public abstract class CommandUtil {
      */
     public static void registerListener(UnregisteredCommandListener listener) {
         // Check if legacy
-        if (BackendPlugin.getInstance().isLegacy()) {
-            new CommandPacketListener(listener.getCommandName(), listener);
-            return;
-        }
-        new CommandPacketListener(listener.getCommandName(), listener, true);
+        RegisteredPacketMode.getProtocolManager().addPacketListener(
+                new CommandPacketListener(listener.getCommandName(), listener)
+        );
     }
 
     /**
@@ -74,9 +72,6 @@ public abstract class CommandUtil {
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
             commandMap.register(listener.getCommandName(), listener);
             server.getClass().getMethod("syncCommands").invoke(server);
-
-            // Register the listener
-            registerListener(listener.getCommandName(), new RealCommandListener(listener));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -10,6 +10,7 @@ import net.brydget.harmony.util.CommandUtil;
 import net.brydget.harmony.world.IndependentWorldCreator;
 import net.brydget.harmony.world.NormalizedWorldCreator;
 import net.brydget.harmony.world.WorldCreatorAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,6 +21,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class BackendPlugin extends JavaPlugin implements StandardBackendPlugin, Listener {
     protected Path dataFolder;
@@ -32,6 +35,7 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     static boolean isLegacy;
     static boolean isFolia;
     NormalizedWorldCreator worldCreator;
+    String serverVersion;
 
     @Override
     public void onEnable() {
@@ -50,15 +54,19 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
 
         // Legacy servers are considered servers running 1.12 or lower
         // For text coloring purposes, we'll consider legacy versions under 1.16.5
-        // To make sure the server is under that version, we'll use reflection to check
-        try {
-            // Ancient debris was added on 1.16.5, that means we can use reflection to check
-            // If the server is running a version older than 1.16.5, it will throw an exception
-            Class.forName("org.bukkit.Material.ANCIENT_DEBRIS");
-            isLegacy = false;
-        } catch (Exception e) {
-            isLegacy = true;
+        Matcher matcher = Pattern.compile("[0-9]\\.[0-9]+((\\.[0-9]+)?)").matcher(Bukkit.getVersion());
+        if (!matcher.find()) {
+            // This should NOT happen on official servers
+            throw new RuntimeException("This server is invalid! Please contact the author of this plugin.");
         }
+
+        final String foundVersion = matcher.group().replaceFirst("[0-9]\\.", "");
+
+        // Remove the "1." prefix, this way we can compare the version without problems
+        double baseVersion = Double.parseDouble(foundVersion);
+
+        isLegacy = baseVersion < Double.parseDouble("16"); // 1.16
+        serverVersion = "1."+baseVersion;
 
         // If the server is running Folia, the Bukkit version will include "Folia"
         isFolia = getServer().getBukkitVersion().contains("Folia");
@@ -200,5 +208,10 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
             return new RegisteredPacketMode();
         }
         throw new RuntimeException("ProtocolLib is not enabled! Please enable ProtocolLib to use this plugin.");
+    }
+
+    @Override
+    public String getServerVersion() {
+        return serverVersion;
     }
 }

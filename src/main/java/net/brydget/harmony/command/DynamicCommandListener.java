@@ -36,4 +36,9 @@ public abstract class DynamicCommandListener extends Command {
      */
     public abstract List<String> tabComplete(String[] args, CommandSender commandSender);
 
+    @Override
+    public boolean execute(CommandSender commandSender, String s, String[] strings) {
+        return whenExecute(strings, commandSender);
+    }
+
 }
