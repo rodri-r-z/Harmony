@@ -6,6 +6,9 @@ import net.brydget.harmony.annotation.Nullable;
 import net.brydget.harmony.scheduler.NormalizedScheduler;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldInitEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,8 +20,28 @@ import java.util.stream.Stream;
 
 public class IndependentWorldCreator implements NormalizedWorldCreator {
     // World creator for servers without Multiverse Core
-    Location DEFULT_LOCATION = Bukkit.getWorld("world").getSpawnLocation();
+    Location DEFULT_LOCATION;
     NormalizedScheduler scheduler = BackendPlugin.getInstance().findScheduler();
+
+    // Identified on v2.0 Release:
+    // If the plugin start is not set to past world
+    // the plugin will get an exception due to Lime 21
+    // To solve this, this will register an event to listen for WorldInitEvent
+
+    public IndependentWorldCreator() {
+        BackendPlugin.getInstance().getServer().getPluginManager()
+                .registerEvents(new Listener() {
+
+                    @EventHandler
+                    public void onWorldInit(WorldInitEvent event) {
+                        // This is called once the server starts
+                        if (DEFULT_LOCATION != null) return;
+
+                        DEFULT_LOCATION = event.getWorld().getSpawnLocation();
+                    }
+
+                }, BackendPlugin.getInstance());
+    }
 
     @Override
     public void create(
