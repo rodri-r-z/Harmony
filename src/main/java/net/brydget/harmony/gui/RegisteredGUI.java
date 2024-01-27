@@ -4,13 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class RegisteredGUI {
 
-    String title;
-    int size;
-    Map<Integer, ItemStack> items;
+    String title = "";
+    int size = 0;
+    Map<Integer, ItemStack> items = new HashMap<>();
 
     /**
      * Sets the title of the GUI and returns the GUIBuilder instance.
