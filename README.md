@@ -40,7 +40,7 @@
 
 **Documentation**: Read the **Wiki** for documentation. 
 
-[**Read JavaDoc**](https://rodri-r-z.github.io/Harmony/docs/)
+[**Read JavaDoc**](https://works.brydget.net/harmony/docs/)
 
 ---
 
