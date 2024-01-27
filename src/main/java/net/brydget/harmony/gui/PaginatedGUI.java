@@ -13,16 +13,20 @@ import org.bukkit.plugin.PluginManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaginatedGUI extends GUIBuilder {
+public class PaginatedGUI {
     // Code is pretty self-explanatory
     // if you understand Spigot API and Java basics, you can understand this
 
-    int PAGES = pageCount();
+    List<Inventory> inventories;
+    int PAGES;
     final BackendPlugin backendPlugin = BackendPlugin.getInstance();
     final PluginManager pluginManager = backendPlugin.getServer().getPluginManager();
     final List<PageSlotClickListener> listeners = new ArrayList<>();
 
-    public PaginatedGUI() {
+    public PaginatedGUI(List<Inventory> inventories) {
+        this.inventories = inventories;
+        PAGES = inventories.size();
+
         if (inventories.isEmpty()) {
             throw new RuntimeException("This GUI was instances manually! Please use GUIBuilder to create GUIS.");
         }
