@@ -38,7 +38,7 @@ public class PaginatedGUI {
             pluginManager.registerEvents(new Listener() {
                 @EventHandler(ignoreCancelled = true)
                 public void onInventoryClick(InventoryClickEvent event) {
-                    if (event.getClickedInventory().equals(a)) {
+                    if (event.getInventory().equals(a)) {
                         event.setCancelled(true);
                         listeners.forEach(b -> {
                             final PageSlotClickEvent event1 = new PageSlotClickEvent();
