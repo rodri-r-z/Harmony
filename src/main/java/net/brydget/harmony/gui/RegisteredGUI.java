@@ -71,4 +71,12 @@ public class RegisteredGUI {
         return inv;
     }
 
+    /**
+     * Gets the size of the page.
+     *
+     * @return         	the size of the page
+     */
+    public int getSize() {
+        return size;
+    }
 }

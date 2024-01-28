@@ -4,6 +4,7 @@ import net.brydget.harmony.BackendPlugin;
 import org.bukkit.ChatColor;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +33,18 @@ public abstract class MessageColorFormatter {
             }
         }
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public static String colorize(Iterable<String> message) {
+        return colorize(String.join("\n", message));
+    }
+
+    public static String colorize(String... message) {
+        return colorize(String.join("\n", message));
+    }
+
+    public static String colorize(List<String> message) {
+        return colorize(String.join("\n", message));
     }
 
 }
