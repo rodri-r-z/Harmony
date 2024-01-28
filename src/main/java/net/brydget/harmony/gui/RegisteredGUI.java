@@ -12,6 +12,9 @@ public class RegisteredGUI {
     String title = "";
     int size = 0;
     Map<Integer, ItemStack> items = new HashMap<>();
+    int previousPageSlot;
+    int nextPageSlot;
+    boolean hasInitializedButtons = false;
 
     /**
      * Sets the title of the GUI and returns the GUIBuilder instance.

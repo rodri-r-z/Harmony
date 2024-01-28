@@ -23,23 +23,37 @@ public class PaginatedGUI {
     final PluginManager pluginManager = backendPlugin.getServer().getPluginManager();
     final List<PageSlotClickListener> listeners = new ArrayList<>();
 
-    public PaginatedGUI(List<Inventory> inventories) {
+    public PaginatedGUI(List<Inventory> inventories, List<RegisteredGUI> pages) {
         this.inventories = inventories;
         PAGES = inventories.size();
 
-        if (inventories.isEmpty()) {
+        if (inventories.isEmpty() || pages.isEmpty() || inventories.size() != pages.size()) {
             throw new RuntimeException("This GUI was instances manually! Please use GUIBuilder to create GUIS.");
         }
 
         // Add listeners to cancel InventoryClickEvents
         for (int i = 0; i < inventories.size(); i++) {
             final Inventory a = inventories.get(i);
+            final RegisteredGUI b = pages.get(i);
+
             int finalI = i;
             pluginManager.registerEvents(new Listener() {
                 @EventHandler(ignoreCancelled = true)
                 public void onInventoryClick(InventoryClickEvent event) {
                     if (event.getInventory().equals(a)) {
                         event.setCancelled(true);
+
+                        final int i = event.getSlot();
+                        final Player player = (Player) event.getWhoClicked();
+
+                        if (b.hasInitializedButtons) {
+                            if (i == b.nextPageSlot) {
+                                nextPage(player);
+                            } else if (i == b.previousPageSlot) {
+                                previousPage(player);
+                            }
+                        }
+
                         listeners.forEach(b -> {
                             final PageSlotClickEvent event1 = new PageSlotClickEvent();
                             event1.inventory = a;
@@ -119,6 +133,8 @@ public class PaginatedGUI {
         if (openInventory == null) return;
 
         final int currentIndex = inventories.indexOf(openInventory);
+
+        if (PAGES == currentIndex + 1) return;
         final Inventory nextInventory = inventories.get(currentIndex + 1);
 
         if (nextInventory == null) return;

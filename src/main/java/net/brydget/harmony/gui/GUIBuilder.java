@@ -49,7 +49,7 @@ public class GUIBuilder {
             inventories.add(page.build());
         }
 
-        return new PaginatedGUI(inventories);
+        return new PaginatedGUI(inventories, pages);
     }
 
 }

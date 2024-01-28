@@ -1,5 +1,6 @@
 package net.brydget.harmony.gui;
 
+import net.brydget.harmony.BackendPlugin;
 import net.brydget.harmony.util.MessageColorFormatter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public abstract class GUIButtonUtil {
     static ItemStack NEXT_PAGE = new ItemStack(Material.ARROW);
     static ItemStack PREVIOUS_PAGE = new ItemStack(Material.ARROW);
+    static BackendPlugin instance = BackendPlugin.getInstance();
 
     public static void _init() {
         // Initialization for all required item stacks
@@ -22,11 +24,13 @@ public abstract class GUIButtonUtil {
         previousPageMeta.setDisplayName(MessageColorFormatter.colorize("&cPrevious page"));
 
         nextPageMeta.setLore(Arrays.stream(MessageColorFormatter.colorize(
-                "Click to go to the next page."
+                "&r",
+                "&fClick to go to the next page."
         ).split("\n")).collect(Collectors.toList()));
 
         previousPageMeta.setLore(Arrays.stream(MessageColorFormatter.colorize(
-                "Click to go to the previous page."
+                "&r",
+                "&fClick to go to the previous page."
         ).split("\n")).collect(Collectors.toList()));
 
         NEXT_PAGE.setItemMeta(nextPageMeta);
@@ -38,22 +42,50 @@ public abstract class GUIButtonUtil {
 
     public static void addNextButton(GUIBuilder guiBuilder) {
         guiBuilder.pages.forEach(registeredGUI -> {
-            setItem(
-                    registeredGUI,
-                    NEXT_PAGE,
-                    getSlotsBeforeLastCenter(registeredGUI, 2)
-            );
+            int i = getSlotsBeforeLastCenter(registeredGUI, 2);
+
+            registeredGUI.nextPageSlot = i;
+            addButton(registeredGUI, NEXT_PAGE, i);
         });
     }
 
     public static void addPreviousButton(GUIBuilder guiBuilder) {
         guiBuilder.pages.forEach(registeredGUI -> {
-            setItem(
-                    registeredGUI,
-                    PREVIOUS_PAGE,
-                    getSlotsBeforeLastCenter(registeredGUI, 0)
-            );
+            int i = getSlotsBeforeLastCenter(registeredGUI, 0);
+
+            registeredGUI.previousPageSlot = i;
+            addButton(registeredGUI, PREVIOUS_PAGE, i);
         });
+    }
+
+    public static void addNextButton(GUIBuilder guiBuilder, ItemStack button, int slot) {
+        guiBuilder.pages.forEach(registeredGUI -> {
+            registeredGUI.nextPageSlot = slot;
+            addButton(registeredGUI, button, slot);
+        });
+    }
+
+    public static void addPreviousButton(GUIBuilder guiBuilder, ItemStack button, int slot) {
+        guiBuilder.pages.forEach(registeredGUI -> {
+            registeredGUI.previousPageSlot = slot;
+            addButton(registeredGUI, button, slot);
+        });
+    }
+
+    static void addButton(RegisteredGUI registeredGUI, ItemStack itemStack, int slot) {
+        registeredGUI.hasInitializedButtons = true;
+
+        setItem(
+                registeredGUI,
+                itemStack,
+                slot
+        );
+    }
+
+    @Deprecated
+    public static void addButtonListeners() {
+        // Automatically add listeners for all buttons
+        // since this commit
     }
 
     public static void addButtons(GUIBuilder guiBuilder) {
@@ -67,7 +99,10 @@ public abstract class GUIButtonUtil {
 
             int slot = getSlotsBeforeLastCenter(registeredGUI, 1);
 
-            currentPageMeta.setDisplayName(MessageColorFormatter.colorize("&6Page " + i));
+            currentPageMeta.setDisplayName(MessageColorFormatter.colorize("&6Page " + (i + 1)));
+            currentPage.setAmount(i + 1);
+
+            currentPage.setItemMeta(currentPageMeta);
             setItem(
                     registeredGUI,
                     currentPage,
