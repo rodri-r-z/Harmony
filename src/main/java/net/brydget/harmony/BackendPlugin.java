@@ -214,4 +214,9 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     public String getServerVersion() {
         return serverVersion;
     }
+
+    @Override
+    public NormalizedWorldCreator getWorldCreator() {
+        return worldCreator;
+    }
 }

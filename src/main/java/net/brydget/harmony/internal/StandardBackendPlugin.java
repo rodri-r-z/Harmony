@@ -2,6 +2,7 @@ package net.brydget.harmony.internal;
 
 import net.brydget.harmony.packet.RegisteredPacketMode;
 import net.brydget.harmony.scheduler.NormalizedScheduler;
+import net.brydget.harmony.world.NormalizedWorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -43,4 +44,6 @@ public interface StandardBackendPlugin {
     RegisteredPacketMode initPacketMode();
 
     String getServerVersion();
+
+    NormalizedWorldCreator getWorldCreator();
 }
