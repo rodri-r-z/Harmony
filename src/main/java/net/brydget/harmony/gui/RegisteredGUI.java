@@ -12,8 +12,8 @@ public class RegisteredGUI {
     String title = "";
     int size = 0;
     Map<Integer, ItemStack> items = new HashMap<>();
-    int previousPageSlot;
-    int nextPageSlot;
+    int previousPageSlot = -2;
+    int nextPageSlot = -2;
     boolean hasInitializedButtons = false;
 
     /**
