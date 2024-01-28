@@ -3,7 +3,7 @@ package net.brydget.harmony.util;
 import net.brydget.harmony.annotation.NeverNull;
 import org.bukkit.entity.Player;
 
-public class StringVariableReplace {
+public abstract class StringVariableReplace {
 
     static String PLAYER_NAME_REGEX = "(?i)\\{player}|(?i)%player%";
     static String PLAYER_NICKNAME_REGEX = "(?i)\\{nickname}|(?i)%nickname%";
