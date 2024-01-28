@@ -14,7 +14,7 @@ public abstract class UnregisteredCommandListener {
     // Handler for unregistered commands listening for chat messages
     // Using packets
 
-    public abstract boolean whenExecute(String[] args, Player player, PacketEvent... packetEvent);
+    public abstract boolean whenExecute(String[] args, Player player, PacketEvent packetEvent);
 
     public String getCommandName() {
         return commandName;
