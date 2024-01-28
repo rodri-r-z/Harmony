@@ -94,9 +94,7 @@ public abstract class GUIButtonUtil {
     }
 
     static int getSlotsBeforeLastCenter(RegisteredGUI registeredGUI, int slots) {
-        final int totalSize = registeredGUI.getSize();
-        final int rowSize = totalSize / 9; // Get the row size, this way we can add the next button
-        return  totalSize - (rowSize / 3 - slots); // 2 slots before the last row's center
+        return registeredGUI.getSize() - slots - 1;
     }
 
 }

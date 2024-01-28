@@ -1,6 +1,7 @@
 package net.brydget.harmony;
 
 import net.brydget.harmony.annotation.Nullable;
+import net.brydget.harmony.gui.GUIButtonUtil;
 import net.brydget.harmony.packet.RegisteredPacketMode;
 import net.brydget.harmony.scheduler.GlobalScheduler;
 import net.brydget.harmony.scheduler.NormalizedScheduler;
@@ -50,6 +51,7 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
 
         // Load all necessary stuff for CommandUtil
         CommandUtil._init();
+        GUIButtonUtil._init();
         worldCreator = server.getPluginManager().isPluginEnabled("Multiverse-Core") ? new WorldCreatorAPI() : new IndependentWorldCreator();
 
         // Legacy servers are considered servers running 1.12 or lower

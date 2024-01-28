@@ -66,7 +66,9 @@ public class RegisteredGUI {
      */
     Inventory build() {
         Inventory inv = Bukkit.createInventory(null, size, title);
-        items.forEach(inv::setItem);
+        try {
+            items.forEach(inv::setItem);
+        } catch (Exception ignored) {  }
 
         return inv;
     }
