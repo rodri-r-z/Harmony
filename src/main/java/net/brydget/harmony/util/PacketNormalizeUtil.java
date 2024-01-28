@@ -27,7 +27,7 @@ public abstract class PacketNormalizeUtil {
      * @return          the clientBoundSystemChatPacket or null
      */
     @Nullable
-    public static Object fromSystemChatPacket(PacketContainer packet) {
+    public static String fromSystemChatPacket(PacketContainer packet) {
         // Check if the packet is a SYSTEM_CHAT packet
         if (packet.getType().equals(PacketType.Play.Server.SYSTEM_CHAT))  {
             // Retrieved from GitHub: https://github.com/dmulloy2/ProtocolLib/issues/2330
