@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'net.brydget'
-version = '1.2'
+version = '2.1'
 
 repositories {
     mavenCentral()
