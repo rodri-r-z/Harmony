@@ -232,6 +232,7 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     public void saveResourceFolder(String folderName, Path destination, boolean replace) {
         final URL resourceURL = classLoader.getResource(folderName);
         if (resourceURL == null) return;
+
         final File source = new File(resourceURL.getFile());
 
         try (final Stream<Path> a = Files.walk(source.toPath())) {
@@ -255,5 +256,10 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     @Override
     public void saveResourceFolder(String folderName, Path destination) {
         saveResourceFolder(folderName, destination, false);
+    }
+
+    @Override
+    public void saveResourceFolder(String folderName) {
+        saveResourceFolder(folderName, dataFolder, false);
     }
 }

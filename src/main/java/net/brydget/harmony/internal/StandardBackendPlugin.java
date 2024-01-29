@@ -46,6 +46,7 @@ public interface StandardBackendPlugin {
     String getServerVersion();
 
     NormalizedWorldCreator getWorldCreator();
-    void saveResourceFolder(String resourcePath, Path destinationPath, boolean replace) throws IOException;
-    void saveResourceFolder(String resourcePath, Path destination) throws IOException;
+    void saveResourceFolder(String resourcePath, Path destinationPath, boolean replace);
+    void saveResourceFolder(String resourcePath, Path destination);
+    void saveResourceFolder(String resourcePath);
 }
