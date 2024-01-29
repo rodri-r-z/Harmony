@@ -14,6 +14,21 @@ public abstract class DynamicCommandListener extends Command {
         commandName = name;
     }
 
+    public DynamicCommandListener(String name, List<String> aliases) {
+        super(name, null, null, aliases);
+        commandName = name;
+    }
+
+    public DynamicCommandListener(String name, String description, List<String> aliases) {
+        super(name, description, null, aliases);
+        commandName = name;
+    }
+
+    public DynamicCommandListener(String name, String description, String usageMessage, List<String> aliases) {
+        super(name, description, usageMessage, aliases);
+        commandName = name;
+    }
+
     // Handler for unregistered commands listening for chat messages
     // Using packets
     public abstract boolean whenExecute(String[] args, CommandSender commandSender);
