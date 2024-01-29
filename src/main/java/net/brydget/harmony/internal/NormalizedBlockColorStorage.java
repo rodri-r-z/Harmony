@@ -34,8 +34,13 @@ public abstract class NormalizedBlockColorStorage {
     protected void _save() {
         final List<Field> methods = Arrays.stream(this.getClass().getFields()).collect(Collectors.toList());
         for (Field method : methods) {
+            final String b = method.getName();
+            if (!b.toUpperCase().equals(b)) {
+                continue;
+            }
+
             try {
-                AllColors.put(method.getName(), (ItemStack) method.get(this));
+                AllColors.put(b, (ItemStack) method.get(this));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
