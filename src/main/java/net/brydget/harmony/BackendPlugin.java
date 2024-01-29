@@ -21,11 +21,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class BackendPlugin extends JavaPlugin implements StandardBackendPlugin, Listener {
@@ -129,8 +135,12 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
             if (is == null) {
                 throw new RuntimeException("File not found: " + resourcePath);
             }
+
+            final Path destPath = dataFolder.resolve(resourcePath);
+            if (!replace && Files.exists(destPath)) return;
+
             // Save the file
-            saveFrom(resourcePath);
+            saveFrom(resourcePath, replace);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -230,25 +240,20 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
 
     @Override
     public void saveResourceFolder(String folderName, Path destination, boolean replace) {
-        final URL resourceURL = classLoader.getResource(folderName);
-        if (resourceURL == null) return;
+        try {
+            List<Path> menusPaths = getPathsFromResourceJAR(folderName);
+            if (!destination.toFile().exists() && !destination.toFile().mkdirs()) {
+                throw new RuntimeException("Could not create " + destination + " folder");
+            }
 
-        final File source = new File(resourceURL.getFile());
-
-        try (final Stream<Path> a = Files.walk(source.toPath())) {
-
-            a.forEach(sourcePath -> {
-                try {
-                    Path destinationPath = destination.resolve(source.toPath().relativize(sourcePath));
-                    if (!replace && destinationPath.toFile().exists()) return;
-
-                    Files.copy(sourcePath, destinationPath);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            for (Path path : menusPaths) {
+                final String fileName = path.getFileName().toString();
+                if (!destination.resolve(fileName).toFile().exists()) {
+                    final InputStream stream = getResource(path.toString().replaceAll("^/", ""));
+                    Files.copy(stream, destination.resolve(fileName));
                 }
-            });
-
-        } catch (IOException e) {
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -260,6 +265,26 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
 
     @Override
     public void saveResourceFolder(String folderName) {
-        saveResourceFolder(folderName, dataFolder, false);
+        saveResourceFolder(folderName, dataFolder.resolve(folderName), false);
+    }
+
+    List<Path> getPathsFromResourceJAR(String folder)
+            throws URISyntaxException, IOException {
+        List<Path> result;
+        String jarPath = getClass().getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI()
+                .getPath();
+        URI uri = URI.create("jar:file:" + jarPath);
+        try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
+            Stream<Path> stream = Files.walk(fs.getPath(folder));
+            result = stream
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+            stream.close();
+        }
+
+        return result;
     }
 }
