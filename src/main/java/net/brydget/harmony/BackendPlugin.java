@@ -19,11 +19,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public abstract class BackendPlugin extends JavaPlugin implements StandardBackendPlugin, Listener {
     protected Path dataFolder;
@@ -31,6 +34,7 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     protected CommandSender console;
     protected PluginLogger logger;
     protected NormalizedScheduler scheduler;
+    protected ClassLoader classLoader;
 
     static BackendPlugin instance;
     static boolean isLegacy;
@@ -76,6 +80,8 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
         if (!dataFolder.toFile().exists() && !dataFolder.toFile().mkdirs()) {
             throw new RuntimeException("Failed to create data folder. This may be due to insufficient permissions.");
         }
+
+        classLoader = getClassLoader();
 
         server.getPluginManager().registerEvents(this, this);
 
@@ -220,5 +226,34 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
     @Override
     public NormalizedWorldCreator getWorldCreator() {
         return worldCreator;
+    }
+
+    @Override
+    public void saveResourceFolder(String folderName, Path destination, boolean replace) {
+        final URL resourceURL = classLoader.getResource(folderName);
+        if (resourceURL == null) return;
+        final File source = new File(resourceURL.getFile());
+
+        try (final Stream<Path> a = Files.walk(source.toPath())) {
+
+            a.forEach(sourcePath -> {
+                try {
+                    Path destinationPath = destination.resolve(source.toPath().relativize(sourcePath));
+                    if (!replace && destinationPath.toFile().exists()) return;
+
+                    Files.copy(sourcePath, destinationPath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveResourceFolder(String folderName, Path destination) {
+        saveResourceFolder(folderName, destination, false);
     }
 }

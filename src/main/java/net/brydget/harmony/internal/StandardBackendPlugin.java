@@ -6,6 +6,7 @@ import net.brydget.harmony.world.NormalizedWorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
@@ -40,10 +41,11 @@ public interface StandardBackendPlugin {
 
     boolean isLegacy();
     boolean isFolia();
-
     RegisteredPacketMode initPacketMode();
 
     String getServerVersion();
 
     NormalizedWorldCreator getWorldCreator();
+    void saveResourceFolder(String resourcePath, Path destinationPath, boolean replace) throws IOException;
+    void saveResourceFolder(String resourcePath, Path destination) throws IOException;
 }
