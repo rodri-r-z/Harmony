@@ -10,7 +10,10 @@ import java.util.Arrays;
 public class LegacyBlockStoredColors extends NormalizedBlockColorStorage {
 
     public void _init(String modifier) {
+        modifier = modifier.toUpperCase();
+
         // Load all colors using reflection
+        String finalModifier = modifier;
         Arrays.stream(LegacyBlockStoredColors.class.getFields()).forEach(a -> {
             try {
                 // Filter only necessary colors
@@ -33,7 +36,7 @@ public class LegacyBlockStoredColors extends NormalizedBlockColorStorage {
                 // It means that it was not deprecated some time ago
                 // Try to use this method to ensure backwards compatibility-
 
-                final MaterialData data = Material.valueOf(modifier).getNewData(dyeColor.getDyeData());
+                final MaterialData data = Material.valueOf(finalModifier).getNewData(dyeColor.getDyeData());
                 ItemStack result;
 
                 try {

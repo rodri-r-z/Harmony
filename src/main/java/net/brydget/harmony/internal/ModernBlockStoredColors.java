@@ -12,6 +12,7 @@ public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
     // this will be loaded when a server is NOT legacy
 
     public void _init(String modifier) {
+        modifier = modifier.toUpperCase();
         // Load all colors using reflection
         final Field[] fields = ModernBlockStoredColors.class.getFields();
         for (Field a: fields) {

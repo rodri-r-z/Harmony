@@ -7,27 +7,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class NormalizedBlockColorStorage {
 
-    protected static ItemStack BLACK;
-    protected static ItemStack BLUE;
-    protected static ItemStack BROWN;
-    protected static ItemStack CYAN;
-    protected static ItemStack GRAY;
-    protected static ItemStack GREEN;
-    protected static ItemStack LIGHT_BLUE;
-    protected static ItemStack LIGHT_GRAY;
-    protected static ItemStack LIME;
-    protected static ItemStack MAGENTA;
-    protected static ItemStack ORANGE;
-    protected static ItemStack PINK;
-    protected static ItemStack PURPLE;
-    protected static ItemStack RED;
-    protected static ItemStack WHITE;
-    protected static ItemStack YELLOW;
+    public static ItemStack BLACK;
+    public static ItemStack BLUE;
+    public static ItemStack BROWN;
+    public static ItemStack CYAN;
+    public static ItemStack GRAY;
+    public static ItemStack GREEN;
+    public static ItemStack LIGHT_BLUE;
+    public static ItemStack LIGHT_GRAY;
+    public static ItemStack LIME;
+    public static ItemStack MAGENTA;
+    public static ItemStack ORANGE;
+    public static ItemStack PINK;
+    public static ItemStack PURPLE;
+    public static ItemStack RED;
+    public static ItemStack WHITE;
+    public static ItemStack YELLOW;
     
     public Map<String, ItemStack> AllColors = new HashMap<>();
     
