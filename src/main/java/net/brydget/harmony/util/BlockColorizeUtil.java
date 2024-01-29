@@ -7,6 +7,7 @@ import net.brydget.harmony.internal.NormalizedBlockColorStorage;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.Set;
 
 public abstract class BlockColorizeUtil {
 
@@ -17,6 +18,7 @@ public abstract class BlockColorizeUtil {
 
     static Map<String, ItemStack> WOOL_COLORS;
     static Map<String, ItemStack> CARPET_COLORS;
+    static Set<String> ALL_COLORS;
 
     static {
         NormalizedBlockColorStorage storage1;
@@ -37,11 +39,10 @@ public abstract class BlockColorizeUtil {
         storage1._init("Wool");
         storage2._init("Carpet");
 
-        storage1.__save();
-        storage2.__save();
-
         WOOL_COLORS = storage1.AllColors;
         CARPET_COLORS = storage2.AllColors;
+
+        ALL_COLORS = WOOL_COLORS.keySet();
     }
 
     @Nullable
@@ -54,5 +55,7 @@ public abstract class BlockColorizeUtil {
         return CARPET_COLORS.get(color);
     }
 
-
+    public static Set<String> getAllColors() {
+        return ALL_COLORS;
+    }
 }

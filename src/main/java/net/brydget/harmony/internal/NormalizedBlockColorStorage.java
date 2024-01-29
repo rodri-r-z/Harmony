@@ -2,8 +2,13 @@ package net.brydget.harmony.internal;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class NormalizedBlockColorStorage {
 
@@ -24,20 +29,20 @@ public abstract class NormalizedBlockColorStorage {
     protected static ItemStack WHITE;
     protected static ItemStack YELLOW;
     
-    public Map<String, ItemStack> AllColors;
+    public Map<String, ItemStack> AllColors = new HashMap<>();
     
     protected void _save() {
-        Arrays.stream(this.getClass().getFields())
-                .forEach(a -> {
-                    try {
-                        AllColors.put(a.getName(), (ItemStack) a.get(this));
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        final List<Field> methods = Arrays.stream(this.getClass().getFields()).collect(Collectors.toList());
+        for (Field method : methods) {
+            try {
+                AllColors.put(method.getName(), (ItemStack) method.get(this));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    public void __save() {
+    void __save() {
         _save();
     }
 
