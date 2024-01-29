@@ -39,10 +39,13 @@ public abstract class BlockColorizeUtil {
         storage1._init("Wool");
         storage2._init("Carpet");
 
+        storage2.__save();
+        storage1.__save();
+
         WOOL_COLORS = storage1.AllColors;
         CARPET_COLORS = storage2.AllColors;
 
-        ALL_COLORS = WOOL_COLORS.keySet();
+        ALL_COLORS = CARPET_COLORS.keySet();
     }
 
     @Nullable

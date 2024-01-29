@@ -42,7 +42,7 @@ public abstract class NormalizedBlockColorStorage {
         }
     }
 
-    void __save() {
+    public void __save() {
         _save();
     }
 

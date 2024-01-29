@@ -3,7 +3,7 @@ package net.brydget.harmony.internal;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
+import java.lang.reflect.Field;
 
 public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
 
@@ -13,7 +13,8 @@ public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
 
     public void _init(String modifier) {
         // Load all colors using reflection
-        Arrays.stream(ModernBlockStoredColors.class.getFields()).forEach(a -> {
+        final Field[] fields = ModernBlockStoredColors.class.getFields();
+        for (Field a: fields) {
             try {
                 // Filter only necessary colors
                 final String colorName = a.getName();
@@ -29,7 +30,7 @@ public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
     }
 
     static Material loadMaterial(String name) {
