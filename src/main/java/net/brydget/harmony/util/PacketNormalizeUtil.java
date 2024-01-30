@@ -9,8 +9,11 @@ import net.brydget.harmony.annotation.Nullable;
 import net.brydget.harmony.packet.PaperClientBoundPacketConverter;
 import net.brydget.harmony.packet.RegisteredPacketMode;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 public abstract class PacketNormalizeUtil {
 
@@ -119,6 +122,44 @@ public abstract class PacketNormalizeUtil {
         sendComponent(
                 ComponentSerializer.toString(components),
                 player
+        );
+    }
+
+    /**
+     * Sends a JSON message to the specified CommandSender.
+     *
+     * @param  JSON    the JSON message to send
+     * @param  entity  the CommandSender to send the message to
+     */
+    public static void sendComponent(String JSON, CommandSender entity) {
+        entity.sendMessage(TextComponent.toLegacyText(ComponentSerializer.parse(JSON)));
+    }
+
+    /**
+     * Sends a BaseComponent to a player
+     *
+     * @param  component	description of parameter
+     * @param  entity	    description of parameter
+     */
+    public static void sendComponent(BaseComponent component, CommandSender entity) {
+        // Sends a BaseComponent to a player
+        sendComponent(
+                ComponentSerializer.toString(component),
+                entity
+        );
+    }
+
+    /**
+     * Sends an array of BaseComponents to a player
+     *
+     * @param  components   array of BaseComponents to be sent
+     * @param  entity       the CommandSender entity to receive the components
+     */
+    public static void sendComponent(BaseComponent[] components, CommandSender entity) {
+        // Sends an array of BaseComponents to a player
+        sendComponent(
+                ComponentSerializer.toString(components),
+                entity
         );
     }
 
