@@ -26,7 +26,7 @@ public abstract class MessageColorFormatter {
                 // we only need to replace it, don't use any reflection to do it
                 message = message.replace(
                         hex,
-                        "&" + Arrays.stream(hex.substring(1)
+                        "&x" + Arrays.stream(hex.substring(1)
                                 .split(""))
                                 .map(a -> "&"+a).collect(Collectors.joining(""))
                 );
