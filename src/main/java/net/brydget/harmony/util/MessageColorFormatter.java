@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 public abstract class MessageColorFormatter {
 
     static String HEX_PATTERN_STRING = "#(?:[0-9a-fA-F]{3}){1,2}";
-    static Pattern GRADIENT_COLOR_PATTERN = Pattern.compile("\\{gradient:"+HEX_PATTERN_STRING+":"+HEX_PATTERN_STRING+"}", Pattern.CASE_INSENSITIVE);
+    static String GRADIENT_COLOR_PATTERN_STRING = "\\{gradient:"+HEX_PATTERN_STRING+":"+HEX_PATTERN_STRING+"}";
+    static Pattern GRADIENT_COLOR_PATTERN = Pattern.compile(GRADIENT_COLOR_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     static Pattern HEX_PATTERN = Pattern.compile("^"+HEX_PATTERN_STRING+"$");
     static boolean IS_LEGACY = BackendPlugin.getInstance().isLegacy();
 
@@ -168,7 +169,8 @@ public abstract class MessageColorFormatter {
 
     public static String stripColors(String str, boolean includeHex) {
         return ChatColor.stripColor(str)
-                .replaceAll(includeHex ? HEX_PATTERN_STRING : "", "");
+                .replaceAll(includeHex ? HEX_PATTERN_STRING : "", "")
+                .replaceAll(includeHex ? GRADIENT_COLOR_PATTERN_STRING : "", "");
     }
 
     public static String stripColors(String str) {
