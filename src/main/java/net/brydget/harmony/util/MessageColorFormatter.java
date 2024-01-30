@@ -12,18 +12,32 @@ import java.util.stream.Collectors;
 
 public abstract class MessageColorFormatter {
 
+    static String TAG_PATTERN_STRING = "<(/?)[\\s\\S]*?>";
     static String HEX_PATTERN_STRING = "#(?:[0-9a-fA-F]{3}){1,2}";
     static String GRADIENT_COLOR_PATTERN_STRING = "\\{gradient:"+HEX_PATTERN_STRING+":"+HEX_PATTERN_STRING+"}";
     static Pattern GRADIENT_COLOR_PATTERN = Pattern.compile(GRADIENT_COLOR_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     static Pattern HEX_PATTERN = Pattern.compile("^"+HEX_PATTERN_STRING+"$");
     static boolean IS_LEGACY = BackendPlugin.getInstance().isLegacy();
 
-    public static String colorize(String message) {
-        // Check if the server is legacy
+    /**
+     * Colorizes a legacy string message using the '&' character as color code prefix.
+     *
+     * @param  message  the message to be colorized
+     * @return          the colorized message
+     */
+    public static String colorizeLegacy(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    /**
+     * Colorizes hexadecimal values in the given message string by replacing them with their corresponding Bungee's API Text Component representation.
+     *
+     * @param  message  the input message string containing hexadecimal values to be colorized
+     * @return          the colorized message string
+     */
+    public static String colorizeHex(String message) {
         if (!IS_LEGACY) {
-            // Replace all HEX colors
             Matcher matcher = HEX_PATTERN.matcher(message);
-            Matcher gradientMatcher = GRADIENT_COLOR_PATTERN.matcher(message);
             while (matcher.find()) {
                 String hex = matcher.group();
                 // The Bungee's API Text Component (Integrated with Spigot API)
@@ -36,9 +50,23 @@ public abstract class MessageColorFormatter {
                                 .map(a -> "&" + a).collect(Collectors.joining(""))
                 );
             }
+        }
+
+        return message;
+    }
+
+    /**
+     * Colorizes the gradient in the given message using specified colors.
+     *
+     * @param  message   the message to colorize
+     * @return          the colorized message
+     */
+    public static String colorizeGradient(String message) {
+        if (!IS_LEGACY) {
+            Matcher gradientMatcher = GRADIENT_COLOR_PATTERN.matcher(message);
 
             while (gradientMatcher.find()) {
-                String hex = matcher.group();
+                String hex = gradientMatcher.group();
 
                 // Split the HEX gradient into two colors
                 String[] hexArray = hex.split(":");
@@ -48,17 +76,51 @@ public abstract class MessageColorFormatter {
                 message = colorize(message.replace(hex, ""), from, to);
             }
         }
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return message;
     }
 
+    /**
+     * Colorizes the given message based on the server type.
+     *
+     * @param  message  the message to be colorized
+     * @return          the colorized message
+     */
+    public static String colorize(String message) {
+        // Check if the server is legacy
+        if (!IS_LEGACY) {
+            // Replace all HEX colors
+            message = colorizeHex(message);
+            message = colorizeGradient(message);
+        }
+        return colorizeLegacy(message);
+    }
+
+    /**
+     * colorize a given message by joining the strings with newline characters.
+     *
+     * @param  message  an Iterable of strings to be colorized
+     * @return          the colorized string
+     */
     public static String colorize(Iterable<String> message) {
         return colorize(String.join("\n", message));
     }
 
+    /**
+     * Colorize the given message.
+     *
+     * @param  message   the message to be colorized
+     * @return           the colorized message
+     */
     public static String colorize(String... message) {
         return colorize(String.join("\n", message));
     }
 
+    /**
+     * colorize the given message list
+     *
+     * @param  message   the list of strings to be colorized
+     * @return          the colorized string
+     */
     public static String colorize(List<String> message) {
         return colorize(String.join("\n", message));
     }
@@ -118,6 +180,26 @@ public abstract class MessageColorFormatter {
     }
 
     /**
+     * Generate a gradient for the given string.
+     *
+     * @param  str  the input string
+     * @return      the colorized gradient string
+     */
+    public static String gradient(String str) {
+        return colorizeGradient(str);
+    }
+
+    /**
+     * This method takes a string and returns a colorized gradient of the string.
+     *
+     * @param  str  the input string to be colorized
+     * @return      the colorized gradient of the input string
+     */
+    public static String rgbGradient(String str) {
+        return colorizeGradient(str);
+    }
+
+    /**
      * Generates a gradient color string from the given input string using the
      * specified start and end colors.
      *
@@ -167,15 +249,58 @@ public abstract class MessageColorFormatter {
         return new Color(red, green, blue);
     }
 
-    public static String stripColors(String str, boolean includeHex) {
-        return ChatColor.stripColor(str)
-                .replaceAll(includeHex ? HEX_PATTERN_STRING : "", "")
-                .replaceAll(includeHex ? GRADIENT_COLOR_PATTERN_STRING : "", "");
+    /**
+     * Strips colors from the input string, including hex and gradient colors if specified.
+     *
+     * @param  str            the input string to strip colors from
+     * @param  includesHex    whether to include hex colors in the stripping process
+     * @param  includesGradient  whether to include gradient colors in the stripping process
+     * @return                the input string with colors stripped
+     */
+    public static String stripColors(String str, boolean includesHex, boolean includesGradient) {
+        String a = stripTags(ChatColor.stripColor(str));
+        if (includesHex) a = stripHexColors(a);
+        if (includesGradient) a = stripGradientColors(a);
+        return a;
     }
 
-    public static String stripColors(String str) {
-        return stripColors(str, true);
+    /**
+     * Strip HTML tags from the given string.
+     *
+     * @param  str  the input string with HTML tags
+     * @return      the string with HTML tags stripped
+     */
+    public static String stripTags(String str) {
+        return ChatColor.stripColor(str)
+                .replaceAll(TAG_PATTERN_STRING, "");
     }
+
+    /**
+     * Strips color codes from the given string.
+     *
+     * @param  str  the input string with color codes
+     * @return     the string with color codes stripped
+     */
+    public static String stripColors(String str) {
+        return stripColors(str, true, true);
+    }
+
+    /**
+     * Strips hex colors from the input string.
+     *
+     * @param  str  the input string
+     * @return      the string with hex colors stripped
+     */
+    public static String stripHexColors(String str) {
+        return str.replaceAll(HEX_PATTERN_STRING, "");
+    }
+
+    /**
+     * Replaces gradient colors in the input string with an empty string.
+     *
+     * @param  str  the input string with gradient colors
+     * @return     the input string with gradient colors removed
+     */
     public static String stripGradientColors(String str) {
         return str.replaceAll(GRADIENT_COLOR_PATTERN_STRING, "");
     }
