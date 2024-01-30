@@ -132,6 +132,14 @@ public abstract class PacketNormalizeUtil {
      * @param  entity  the CommandSender to send the message to
      */
     public static void sendComponent(String JSON, CommandSender entity) {
+        if (entity instanceof Player) {
+            sendComponent(
+                    JSON,
+                    (Player) entity
+            );
+            return;
+        }
+
         entity.sendMessage(TextComponent.toLegacyText(ComponentSerializer.parse(JSON)));
     }
 
@@ -142,6 +150,13 @@ public abstract class PacketNormalizeUtil {
      * @param  entity	    description of parameter
      */
     public static void sendComponent(BaseComponent component, CommandSender entity) {
+        if (entity instanceof Player) {
+            sendComponent(
+                    component,
+                    (Player) entity
+            );
+            return;
+        }
         // Sends a BaseComponent to a player
         sendComponent(
                 ComponentSerializer.toString(component),
@@ -157,6 +172,13 @@ public abstract class PacketNormalizeUtil {
      */
     public static void sendComponent(BaseComponent[] components, CommandSender entity) {
         // Sends an array of BaseComponents to a player
+        if (entity instanceof Player) {
+            sendComponent(
+                    components,
+                    (Player) entity
+            );
+            return;
+        }
         sendComponent(
                 ComponentSerializer.toString(components),
                 entity
