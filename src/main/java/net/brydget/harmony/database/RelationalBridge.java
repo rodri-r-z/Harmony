@@ -1,5 +1,8 @@
 package net.brydget.harmony.database;
 
+import net.brydget.harmony.annotation.NeverNull;
+import net.brydget.harmony.annotation.Nullable;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -27,7 +30,7 @@ public class RelationalBridge {
     }
 
 
-    public static RelationalBridge fromSqlite(String database) {
+    public static RelationalBridge fromSqlite(@NeverNull String database) {
         try {
             // Instance the driver for older versions
             Class.forName("org.sqlite.JDBC");
@@ -43,7 +46,7 @@ public class RelationalBridge {
         }
     }
 
-    public RelationalBridge(String host, String database, String username, String password) {
+    public RelationalBridge(@NeverNull String host, @NeverNull String database, @NeverNull String username, @NeverNull String password) {
         try {
             // Instance the driver for older versions
             Class.forName("com.mysql.jdbc.Driver");
@@ -61,7 +64,7 @@ public class RelationalBridge {
         }
     }
 
-    public RelationalBridge(String host, int port, String database, String username, String password) {
+    public RelationalBridge(@NeverNull String host, @Nullable int port, @NeverNull String database, @NeverNull String username, @NeverNull String password) {
         try {
             // Instance the driver for older versions
             Class.forName("com.mysql.jdbc.Driver");

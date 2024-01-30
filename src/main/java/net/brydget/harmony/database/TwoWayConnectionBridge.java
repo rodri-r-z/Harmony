@@ -21,7 +21,6 @@ public class TwoWayConnectionBridge implements NormalizedDatabaseBridge {
     RelationalBridge relationalBridge;
     List<String> sqlTables = new ArrayList<>();
 
-
     public TwoWayConnectionBridge(File configFile) throws Exception {
         // Load the configuration file
         // This will be used to determine which driver to use
