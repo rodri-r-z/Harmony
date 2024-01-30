@@ -243,6 +243,59 @@ public class SQLConnectionBridge implements NormalizedDatabaseBridge {
         }
     }
 
+    void createNewTable(String table, Map<String, Object> columns, boolean a) {
+        try {
+            if (isTableNameInvalid(table)) {
+                throw new IllegalArgumentException("Invalid table name: " + table);
+            }
+            final String b = a ? "IF NOT EXISTS " : "";
+
+            // Check the service using
+            if (connection != null) {
+                // We're using SQL. Query the database
+                String types = columns
+                        .entrySet().stream().map(c -> {
+                            final Object u = c.getValue();
+                            final String d = c.getKey();
+
+                            String f;
+                            if (u instanceof String) {
+                                f = "TEXT";
+                            } else if (u instanceof Integer) {
+                                f = "INT";
+                            } else if (u instanceof Long) {
+                                f = "BIGINT";
+                            } else if (u instanceof Boolean) {
+                                f = "BOOLEAN";
+                            } else if (u instanceof Float) {
+                                f = "FLOAT";
+                            } else if (u instanceof Double) {
+                                f = "DOUBLE";
+                            } else if (u instanceof Byte) {
+                                f = "TINYINT";
+                            } else if (u instanceof Short) {
+                                f = "SMALLINT";
+                            } else {
+                                f = "VARCHAR(255)";
+                            }
+
+                            return d + " " + f;
+                        }).collect(Collectors.joining(", "));
+                connection.prepareStatement("CREATE TABLE " +b + table + " (" + types + ")").execute();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void newTable(String table, Map<String, Object> columns) {
+        createNewTable(table, columns, true);
+    }
+
+    public void newTable(String table, Map<String, Object> columns, boolean skipIfExist) {
+        createNewTable(table, columns, skipIfExist);
+    }
+
     boolean isTableNameInvalid(String table) {
         return !StringUtil.strictMatches(table, "^[a-zA-Z_][a-zA-Z0-9_]*$");
     }
