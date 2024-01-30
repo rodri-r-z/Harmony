@@ -14,7 +14,7 @@ public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
     public void _init(String modifier) {
         modifier = modifier.toUpperCase();
         // Load all colors using reflection
-        final Field[] fields = ModernBlockStoredColors.class.getFields();
+        final Field[] fields = this.getClass().getFields();
         for (Field a: fields) {
             try {
                 // Filter only necessary colors
@@ -26,7 +26,7 @@ public class ModernBlockStoredColors extends NormalizedBlockColorStorage {
 
                 Material material = loadMaterial(colorName+"_"+modifier);
                 if (material != null) {
-                    a.set(ModernBlockStoredColors.class, new ItemStack(material));
+                    a.set(this, new ItemStack(material));
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

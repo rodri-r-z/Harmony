@@ -11,22 +11,22 @@ import java.util.stream.Collectors;
 
 public abstract class NormalizedBlockColorStorage {
 
-    public static ItemStack BLACK;
-    public static ItemStack BLUE;
-    public static ItemStack BROWN;
-    public static ItemStack CYAN;
-    public static ItemStack GRAY;
-    public static ItemStack GREEN;
-    public static ItemStack LIGHT_BLUE;
-    public static ItemStack LIGHT_GRAY;
-    public static ItemStack LIME;
-    public static ItemStack MAGENTA;
-    public static ItemStack ORANGE;
-    public static ItemStack PINK;
-    public static ItemStack PURPLE;
-    public static ItemStack RED;
-    public static ItemStack WHITE;
-    public static ItemStack YELLOW;
+    public ItemStack BLACK;
+    public ItemStack BLUE;
+    public ItemStack BROWN;
+    public ItemStack CYAN;
+    public ItemStack GRAY;
+    public ItemStack GREEN;
+    public ItemStack LIGHT_BLUE;
+    public ItemStack LIGHT_GRAY;
+    public ItemStack LIME;
+    public ItemStack MAGENTA;
+    public ItemStack ORANGE;
+    public ItemStack PINK;
+    public ItemStack PURPLE;
+    public ItemStack RED;
+    public ItemStack WHITE;
+    public ItemStack YELLOW;
     
     public Map<String, ItemStack> AllColors = new HashMap<>();
     

@@ -14,7 +14,7 @@ public class LegacyBlockStoredColors extends NormalizedBlockColorStorage {
 
         // Load all colors using reflection
         String finalModifier = modifier;
-        Arrays.stream(LegacyBlockStoredColors.class.getFields()).forEach(a -> {
+        Arrays.stream(this.getClass().getFields()).forEach(a -> {
             try {
                 // Filter only necessary colors
                 String colorName = a.getName();
@@ -47,7 +47,7 @@ public class LegacyBlockStoredColors extends NormalizedBlockColorStorage {
                             .invoke(data);
                 }
 
-                a.set(LegacyBlockStoredColors.class, result);
+                a.set(this.getClass(), result);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
