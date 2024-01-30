@@ -12,8 +12,9 @@ import java.util.stream.Collectors;
 
 public abstract class MessageColorFormatter {
 
-    static String HEX_PATTERN_STRING = "^#(?:[0-9a-fA-F]{3}){1,2}$";
-    static Pattern HEX_PATTERN = Pattern.compile(HEX_PATTERN_STRING);
+    static String HEX_PATTERN_STRING = "#(?:[0-9a-fA-F]{3}){1,2}";
+    static Pattern GRADIENT_COLOR_PATTERN = Pattern.compile("\\{gradient:"+HEX_PATTERN_STRING+":"+HEX_PATTERN_STRING+"}", Pattern.CASE_INSENSITIVE);
+    static Pattern HEX_PATTERN = Pattern.compile("^"+HEX_PATTERN_STRING+"$");
     static boolean IS_LEGACY = BackendPlugin.getInstance().isLegacy();
 
     public static String colorize(String message) {
@@ -21,6 +22,7 @@ public abstract class MessageColorFormatter {
         if (!IS_LEGACY) {
             // Replace all HEX colors
             Matcher matcher = HEX_PATTERN.matcher(message);
+            Matcher gradientMatcher = GRADIENT_COLOR_PATTERN.matcher(message);
             while (matcher.find()) {
                 String hex = matcher.group();
                 // The Bungee's API Text Component (Integrated with Spigot API)
@@ -32,6 +34,17 @@ public abstract class MessageColorFormatter {
                                         .split(""))
                                 .map(a -> "&" + a).collect(Collectors.joining(""))
                 );
+            }
+
+            while (gradientMatcher.find()) {
+                String hex = matcher.group();
+
+                // Split the HEX gradient into two colors
+                String[] hexArray = hex.split(":");
+
+                String from = hexArray[0].replaceFirst("(?i)\\{gradient:", "");
+                String to = hexArray[1];
+                message = colorize(message.replace(hex, ""), from, to);
             }
         }
         return ChatColor.translateAlternateColorCodes('&', message);
