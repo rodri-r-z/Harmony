@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 public abstract class MessageColorFormatter {
 
-    static Pattern HEX_PATTERN = Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$");
+    static String HEX_PATTERN_STRING = "^#(?:[0-9a-fA-F]{3}){1,2}$";
+    static Pattern HEX_PATTERN = Pattern.compile(HEX_PATTERN_STRING);
     static boolean IS_LEGACY = BackendPlugin.getInstance().isLegacy();
 
     public static String colorize(String message) {
@@ -60,7 +61,7 @@ public abstract class MessageColorFormatter {
     }
 
     /**
-     * Interpolates a RGB gradient onto the input string using the given colors.
+     * Interpolates am RGB gradient onto the input string using the given colors.
      *
      * @param  str  the input string to colorize
      * @param  from the starting color
@@ -150,6 +151,15 @@ public abstract class MessageColorFormatter {
         int green = Integer.parseInt(hex.substring(3, 5), 16);
         int blue = Integer.parseInt(hex.substring(5, 7), 16);
         return new Color(red, green, blue);
+    }
+
+    public static String stripColors(String str, boolean includeHex) {
+        return ChatColor.stripColor(str)
+                .replaceAll(includeHex ? HEX_PATTERN_STRING : "", "");
+    }
+
+    public static String stripColors(String str) {
+        return stripColors(str, true);
     }
 
     static String rgbToHex(int red, int green, int blue) {
