@@ -304,6 +304,17 @@ public abstract class MessageColorFormatter {
     public static String stripGradientColors(String str) {
         return str.replaceAll(GRADIENT_COLOR_PATTERN_STRING, "");
     }
+
+    /**
+     * A function that takes a string and returns a colorized hexadecimal string.
+     *
+     * @param  str  the input string
+     * @return      the colorized hexadecimal string
+     */
+    public static String hex(String str) {
+        return colorizeHex(str);
+    }
+
     static String rgbToHex(int red, int green, int blue) {
         return String.format("#%02x%02x%02x", red, green, blue);
     }
