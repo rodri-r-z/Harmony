@@ -66,13 +66,13 @@ public abstract class BackendPlugin extends JavaPlugin implements StandardBacken
 
         // Legacy servers are considered servers running 1.12 or lower
         // For text coloring purposes, we'll consider legacy versions under 1.16.5
-        Matcher matcher = Pattern.compile("[0-9]\\.[0-9]+((\\.[0-9]+)?)").matcher(Bukkit.getVersion());
+        Matcher matcher = Pattern.compile("\\d\\.\\d+((\\.\\d+)?)").matcher(Bukkit.getVersion());
         if (!matcher.find()) {
             // This should NOT happen on official servers
             throw new RuntimeException("This server is invalid! Please contact the author of this plugin.");
         }
 
-        final String foundVersion = matcher.group().replaceFirst("[0-9]\\.", "");
+        final String foundVersion = matcher.group().replaceFirst("\\d\\.", "");
 
         // Remove the "1." prefix, this way we can compare the version without problems
         double baseVersion = Double.parseDouble(foundVersion);

@@ -53,7 +53,7 @@ public class PluginLogger {
     public void warn(Object message) {
         warn(String.valueOf(message));
     }
-    public void warn(Object[] message) {
+    public void warn(Object... message) {
         Arrays.stream(message).collect(Collectors.toList()).forEach(this::warn);
     }
 
@@ -67,7 +67,7 @@ public class PluginLogger {
     public void warning(Object message) {
         warn(String.valueOf(message));
     }
-    public void warning(Object[] message) {
+    public void warning(Object... message) {
         Arrays.stream(message).collect(Collectors.toList()).forEach(this::warn);
     }
     public void error(String message) {
@@ -76,10 +76,10 @@ public class PluginLogger {
     public void error(Object message) {
         severe(String.valueOf(message));
     }
-    public void error(Object[] message) {
+    public void error(Object... message) {
         Arrays.stream(message).collect(Collectors.toList()).forEach(this::error);
     }
-    public void severe(Object[] message) {
+    public void severe(Object... message) {
         Arrays.stream(message).collect(Collectors.toList()).forEach(this::severe);
     }
 

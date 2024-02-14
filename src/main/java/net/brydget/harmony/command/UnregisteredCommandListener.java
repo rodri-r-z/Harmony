@@ -2,12 +2,15 @@ package net.brydget.harmony.command;
 
 import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.entity.Player;
-
 public abstract class UnregisteredCommandListener {
 
     String commandName;
 
-    public UnregisteredCommandListener(String name) {
+    /**
+     * @deprecated (since v2.2. Scheduled for removal in v3.0)
+     * */
+    @Deprecated
+    protected UnregisteredCommandListener(String name) {
         commandName = name;
     }
 

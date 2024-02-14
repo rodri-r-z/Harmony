@@ -2,9 +2,6 @@ package net.brydget.harmony.util;
 
 import net.brydget.harmony.BackendPlugin;
 import net.brydget.harmony.command.DynamicCommandListener;
-import net.brydget.harmony.command.UnregisteredCommandListener;
-import net.brydget.harmony.internal.CommandPacketListener;
-import net.brydget.harmony.packet.RegisteredPacketMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
@@ -34,18 +31,6 @@ public abstract class CommandUtil {
 
     // Utility class to dynamically create commands
     // And listen for chat commands without registering them
-
-    /**
-     * Registers a listener for a command, taking into account whether it is a legacy command.
-     *
-     * @param  listener  the listener to be registered
-     */
-    public static void registerListener(UnregisteredCommandListener listener) {
-        // Check if legacy
-        RegisteredPacketMode.getProtocolManager().addPacketListener(
-                new CommandPacketListener(listener.getCommandName(), listener)
-        );
-    }
 
     /**
      * Registers a listener for the given command name and executor.
