@@ -7,6 +7,9 @@
 
 ---
 
+**NOTICE**
+This project is outdated and soon will be discontinued, the wiki is not even finished. Rest in piece, Harmony. ;)
+
 **Compatibility:**
 
 - **< 1.7**: Is supported with packet listening for many features (i.e. chat system)
