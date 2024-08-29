@@ -7,8 +7,8 @@
 
 ---
 
-**NOTICE**
-This project is outdated and soon will be discontinued, the wiki is not even finished. Rest in piece, Harmony. ;)
+> **NOTICE**
+> Though as of right now, Harmony still works, there will be a major rewrite of the project, so most APIs & Functionalities will be either deprecated or removed on the next build.
 
 **Compatibility:**
 
